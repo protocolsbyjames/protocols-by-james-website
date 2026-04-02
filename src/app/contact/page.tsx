@@ -1,11 +1,43 @@
 "use client";
+
 import { useState } from "react";
 import { Send, Mail, AtSign, Globe } from "lucide-react";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", interest: "General Inquiry", message: "" });
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); setSubmitted(true); };
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    interest: "General Inquiry",
+    message: ""
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to send message");
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try again or email me directly.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (submitted) {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
@@ -14,11 +46,12 @@ export default function ContactPage() {
             <Send className="w-9 h-9 text-amber-400" />
           </div>
           <h1 className="text-4xl font-bold mb-4">Message Sent!</h1>
-          <p className="text-zinc-400 text-lg">Thanks for reaching out. I’ll get back to you as soon as possible.</p>
+          <p className="text-zinc-400 text-lg">Thanks for reaching out. I&apos;ll get back to you as soon as possible.</p>
         </div>
       </main>
     );
   }
+
   return (
     <main className="min-h-screen bg-black text-white">
       <section className="pt-32 pb-20 px-6">
@@ -28,20 +61,39 @@ export default function ContactPage() {
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto">Have a question or ready to start? Drop me a message below.</p>
         </div>
       </section>
+
       <section className="pb-20 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Name</label>
-              <input type="text" required value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors" placeholder="Your name" />
+              <input
+                type="text"
+                required
+                value={form.name}
+                onChange={(e) => setForm({...form, name: e.target.value})}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors"
+                placeholder="Your name"
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Email</label>
-              <input type="email" required value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors" placeholder="you@email.com" />
+              <input
+                type="email"
+                required
+                value={form.email}
+                onChange={(e) => setForm({...form, email: e.target.value})}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors"
+                placeholder="you@email.com"
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Interest</label>
-              <select value={form.interest} onChange={(e) => setForm({...form, interest: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors">
+              <select
+                value={form.interest}
+                onChange={(e) => setForm({...form, interest: e.target.value})}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors"
+              >
                 <option>General Inquiry</option>
                 <option>Coaching Application</option>
                 <option>Collaboration</option>
@@ -50,12 +102,30 @@ export default function ContactPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">Message</label>
-              <textarea required rows={5} value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors resize-none" placeholder="Tell me about your goals..." />
+              <textarea
+                required
+                rows={5}
+                value={form.message}
+                onChange={(e) => setForm({...form, message: e.target.value})}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors resize-none"
+                placeholder="Tell me about your goals..."
+              />
             </div>
-            <button type="submit" className="w-full bg-amber-400 text-black py-4 rounded-full font-bold text-lg hover:bg-amber-300 transition-colors flex items-center justify-center gap-2">
-              Send Message <Send className="w-5 h-5" />
+
+            {error && (
+              <p className="text-red-400 text-sm">{error}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-amber-400 text-black py-4 rounded-full font-bold text-lg hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Sending..." : "Send Message"}
+              {!loading && <Send className="w-5 h-5" />}
             </button>
           </form>
+
           <div className="space-y-8">
             <div>
               <h3 className="text-xl font-bold mb-4">Direct Contact</h3>
