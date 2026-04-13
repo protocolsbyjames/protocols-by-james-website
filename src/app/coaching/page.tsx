@@ -27,6 +27,43 @@ const idealFor = [
   "You want accountability and a coach who actually cares",
 ];
 
+const plans = [
+  {
+    name: "Starter",
+    price: "45.99",
+    tagline: "Get into the system and start moving.",
+    features: [
+      "Personalized training program",
+      "Custom nutrition plan",
+      "Monthly check-ins",
+      "App access & tracking",
+    ],
+  },
+  {
+    name: "Pro",
+    price: "69.99",
+    tagline: "The most popular option for serious progress.",
+    featured: true,
+    features: [
+      "Everything in Starter",
+      "Weekly check-ins with photo & metric reviews",
+      "Real-time program adjustments",
+      "Direct messaging access to James",
+    ],
+  },
+  {
+    name: "Elite",
+    price: "129.99",
+    tagline: "Maximum access, fastest results.",
+    features: [
+      "Everything in Pro",
+      "Priority messaging & response",
+      "Advanced protocol guidance (supplements, recovery, lifestyle)",
+      "Lifestyle & habit optimization coaching",
+    ],
+  },
+];
+
 export default function CoachingPage() {
   return (
     <main className="min-h-screen bg-black text-white">
@@ -81,7 +118,79 @@ export default function CoachingPage() {
           </div>
         </div>
       </section>
-      <section className="py-20 px-6 bg-zinc-950">
+      <section id="pricing" className="py-20 px-6 bg-zinc-950">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="text-amber-400 font-semibold tracking-widest uppercase text-sm">Pricing</span>
+            <h2 className="text-3xl md:text-5xl font-bold mt-4 mb-4">Choose Your Plan</h2>
+            <p className="text-zinc-400 max-w-xl mx-auto">Monthly subscription. Cancel anytime from your account. All plans billed in USD.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {plans.map((plan) => (
+              <div
+                key={plan.name}
+                className={`rounded-2xl border p-8 flex flex-col ${
+                  plan.featured
+                    ? "border-amber-400 bg-amber-400/5"
+                    : "border-zinc-800 bg-black"
+                }`}
+              >
+                {plan.featured && (
+                  <span className="self-start mb-4 text-xs font-bold text-black bg-amber-400 px-3 py-1 rounded-full uppercase tracking-wider">
+                    Most Popular
+                  </span>
+                )}
+                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                <p className="text-zinc-400 text-sm mb-6">{plan.tagline}</p>
+                <div className="mb-6">
+                  <span className="text-5xl font-bold">${plan.price}</span>
+                  <span className="text-zinc-400 ml-1">/ month</span>
+                </div>
+                <ul className="space-y-3 mb-8 flex-1">
+                  {plan.features.map((f) => (
+                    <li key={f} className="flex items-start gap-3 text-sm">
+                      <Check className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
+                      <span className="text-zinc-300">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href={`https://app.protocolsbyjames.com/signup`}
+                  className={`w-full text-center py-3 rounded-full font-bold transition-colors ${
+                    plan.featured
+                      ? "bg-amber-400 text-black hover:bg-amber-300"
+                      : "bg-white/10 text-white hover:bg-white/20"
+                  }`}
+                >
+                  Start {plan.name}
+                </a>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 max-w-3xl mx-auto text-center rounded-2xl border border-zinc-800 bg-black px-6 py-8">
+            <h3 className="text-xl font-bold mb-2">Coach mentorship</h3>
+            <p className="text-zinc-400 text-sm">
+              For aspiring fitness coaches who want 1-on-1 mentorship. Custom
+              scope and pricing based on your goals (typically $500–$5,000).{" "}
+              <Link href="/contact" className="text-amber-400 hover:underline">
+                Apply to learn more
+              </Link>
+              .
+            </p>
+          </div>
+
+          <p className="mt-10 text-center text-xs text-zinc-500 max-w-xl mx-auto">
+            Cancel anytime. By subscribing you agree to our{" "}
+            <Link href="/terms" className="underline hover:text-zinc-300">Terms of Service</Link>,{" "}
+            <Link href="/privacy" className="underline hover:text-zinc-300">Privacy Policy</Link>, and{" "}
+            <Link href="/refund-policy" className="underline hover:text-zinc-300">Refund Policy</Link>.
+          </p>
+        </div>
+      </section>
+
+      <section className="py-20 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-6">Ready to Start?</h2>
           <p className="text-xl text-zinc-400 mb-10">Applications are open. Take the first step toward building your best self.</p>
