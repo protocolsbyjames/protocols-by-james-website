@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Send, Mail, AtSign, Globe } from "lucide-react";
+import { Send, Mail, AtSign } from "lucide-react";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -136,8 +136,22 @@ export default function ContactPage() {
             <div>
               <h3 className="text-xl font-bold mb-4">Follow Along</h3>
               <div className="space-y-3">
-                <a href="#" className="flex items-center gap-3 text-zinc-400 hover:text-amber-400 transition-colors"><AtSign className="w-5 h-5" /> Instagram</a>
-                <a href="#" className="flex items-center gap-3 text-zinc-400 hover:text-amber-400 transition-colors"><Globe className="w-5 h-5" /> Twitter / X</a>
+                <a
+                  href="https://instagram.com/protocolsbyjames"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-zinc-400 hover:text-amber-400 transition-colors"
+                >
+                  <AtSign className="w-5 h-5" /> Instagram · @protocolsbyjames
+                </a>
+                <a
+                  href="https://tiktok.com/@protocolsbyjames"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-zinc-400 hover:text-amber-400 transition-colors"
+                >
+                  <AtSign className="w-5 h-5" /> TikTok · @protocolsbyjames
+                </a>
               </div>
             </div>
             <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6">

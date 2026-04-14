@@ -32,9 +32,28 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-sm mb-4 text-gray-300 uppercase tracking-wider">Connect</h4>
             <div className="space-y-2">
-              <a href="https://app.protocolsbyjames.com" className="block text-sm text-gray-400 hover:text-white transition-colors">Client Dashboard</a>
-              <a href="https://instagram.com" className="block text-sm text-gray-400 hover:text-white transition-colors">Instagram</a>
-              <a href="https://youtube.com" className="block text-sm text-gray-400 hover:text-white transition-colors">YouTube</a>
+              <a
+                href="https://app.protocolsbyjames.com"
+                className="block text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                Client Dashboard
+              </a>
+              <a
+                href="https://instagram.com/protocolsbyjames"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                Instagram
+              </a>
+              <a
+                href="https://tiktok.com/@protocolsbyjames"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                TikTok
+              </a>
             </div>
           </div>
 

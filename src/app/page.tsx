@@ -9,9 +9,18 @@ const services = [
 ];
 
 const testimonials = [
-  { name: "Client A", result: "Lost 30lbs in 16 weeks", quote: "James completely changed how I approach fitness. The accountability and structure made all the difference." },
-  { name: "Client B", result: "Gained 15lbs of muscle", quote: "The programming is next level. Every detail is dialed in — training, nutrition, everything." },
-  { name: "Client C", result: "Best shape at 35", quote: "I thought my best days were behind me. James proved me wrong. I look and feel better than my 20s." },
+  {
+    name: "Robert T.",
+    result: "Down 75 lbs since December",
+    quote:
+      "James built me a plan I could actually stick to. The weekly check-ins kept me honest — 75 pounds gone and I'm still going.",
+  },
+  {
+    name: "Jose P.",
+    result: "Down 40 lbs since November",
+    quote:
+      "I'd tried everything before working with James. What's different is the adjustments — my plan evolves every week based on how I'm actually responding.",
+  },
 ];
 
 const protocolIncludes = [
@@ -49,7 +58,7 @@ export default function Home() {
               Apply for Coaching <ArrowRight size={20} />
             </Link>
             <Link
-              href="/coaching#programs"
+              href="/coaching#pricing"
               className="border border-white/20 text-white px-8 py-4 rounded-md font-semibold text-lg hover:bg-white/5 transition-colors inline-flex items-center justify-center"
             >
               View Programs
@@ -72,11 +81,11 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white/5 border border-white/10 rounded-xl p-8 card-hover">
-              <div className="text-4xl font-bold mb-2">100+</div>
-              <p className="text-gray-400">Clients transformed</p>
+              <div className="text-4xl font-bold mb-2">50+</div>
+              <p className="text-gray-400">Client transformations</p>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-xl p-8 card-hover">
-              <div className="text-4xl font-bold mb-2">5+ Years</div>
+              <div className="text-4xl font-bold mb-2">8+ Years</div>
               <p className="text-gray-400">Coaching experience</p>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-xl p-8 card-hover">
