@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Brand accent: khaki palette overriding Tailwind's amber */
+@theme {
+  --color-amber-300: #d0caa9;
+  --color-amber-400: #bdb391;
+  --color-amber-500: #a89968;
+}
+
 :root {
   --background: #000000;
   --foreground: #ffffff;

@@ -21,7 +21,7 @@ export default async function Image() {
           justifyContent: "space-between",
           padding: "80px",
           background:
-            "radial-gradient(ellipse at top left, #1f1408 0%, #000000 55%)",
+            "radial-gradient(ellipse at top left, #1a1a14 0%, #000000 55%)",
           color: "white",
           fontFamily: "sans-serif",
         }}
@@ -33,7 +33,7 @@ export default async function Image() {
             gap: "16px",
             fontSize: "20px",
             letterSpacing: "6px",
-            color: "#fbbf24",
+            color: "#bdb391",
             fontWeight: 600,
             textTransform: "uppercase",
           }}
@@ -42,7 +42,7 @@ export default async function Image() {
             style={{
               width: "48px",
               height: "3px",
-              background: "#fbbf24",
+              background: "#bdb391",
             }}
           />
           <span>Protocols by James</span>
@@ -67,7 +67,7 @@ export default async function Image() {
             }}
           >
             <span>Build your&nbsp;</span>
-            <span style={{ color: "#fbbf24" }}>best self</span>
+            <span style={{ color: "#bdb391" }}>best self</span>
             <span>.</span>
           </div>
           <div
