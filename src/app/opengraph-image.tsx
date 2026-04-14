@@ -45,7 +45,7 @@ export default async function Image() {
               background: "#fbbf24",
             }}
           />
-          Protocols by James
+          <span>Protocols by James</span>
         </div>
 
         <div
@@ -57,6 +57,8 @@ export default async function Image() {
         >
           <div
             style={{
+              display: "flex",
+              flexWrap: "wrap",
               fontSize: "96px",
               fontWeight: 800,
               lineHeight: 1.05,
@@ -64,8 +66,9 @@ export default async function Image() {
               maxWidth: "900px",
             }}
           >
-            Build your{" "}
-            <span style={{ color: "#fbbf24" }}>best self</span>.
+            <span>Build your&nbsp;</span>
+            <span style={{ color: "#fbbf24" }}>best self</span>
+            <span>.</span>
           </div>
           <div
             style={{
