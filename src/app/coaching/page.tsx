@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, MessageCircle, Target, Zap, RefreshCw, Check } from "lucide-react";
+import { ArrowRight, MessageCircle, Target, Zap, RefreshCw, Check, X } from "lucide-react";
 import Link from "next/link";
 
 const steps = [
@@ -25,6 +25,51 @@ const idealFor = [
   "You want expert guidance on training, nutrition, and protocols",
   "You’ve tried doing it alone and want faster, real results",
   "You want accountability and a coach who actually cares",
+];
+
+const comparisonRows: {
+  label: string;
+  starter: string | boolean;
+  pro: string | boolean;
+  elite: string | boolean;
+}[] = [
+  { label: "Personalized training program", starter: true, pro: true, elite: true },
+  { label: "Custom macro-based nutrition plan", starter: true, pro: true, elite: true },
+  { label: "In-app workout & meal tracking", starter: true, pro: true, elite: true },
+  { label: "Check-in cadence", starter: "Monthly", pro: "Weekly", elite: "Weekly" },
+  { label: "Photo & metric reviews", starter: false, pro: true, elite: true },
+  { label: "Real-time program adjustments", starter: false, pro: true, elite: true },
+  { label: "Direct messaging with James", starter: false, pro: true, elite: true },
+  { label: "Priority response time", starter: false, pro: false, elite: true },
+  { label: "Advanced protocol guidance", starter: false, pro: false, elite: true },
+  { label: "Lifestyle & habit coaching", starter: false, pro: false, elite: true },
+];
+
+const faqs = [
+  {
+    q: "How is this different from a generic fitness app?",
+    a: "Apps give you templates. Protocols by James gives you a real coach building a plan for your body, your history, and your lifestyle — and adjusting it every week based on your check-ins. The app is just the delivery system.",
+  },
+  {
+    q: "Can I cancel anytime?",
+    a: "Yes. Subscriptions are month-to-month and you can cancel from your account at any time. You'll keep access through the end of the billing period you already paid for.",
+  },
+  {
+    q: "What if I'm a total beginner?",
+    a: "Perfect — that's actually the best time to start with a coach so you don't build bad habits. Your program will be scaled to wherever you are today, including exercise substitutions if equipment or mobility is limited.",
+  },
+  {
+    q: "What equipment do I need?",
+    a: "We build your program around the equipment you actually have. Full gym, home setup with dumbbells, or bodyweight only — just tell us during onboarding and your plan matches.",
+  },
+  {
+    q: "How soon will I see results?",
+    a: "Most clients notice strength and energy changes in the first 2–3 weeks. Visible physique changes typically show up at 6–8 weeks with consistent adherence. Real transformation is a 12+ week process, which is why we obsess over sustainable habits over quick fixes.",
+  },
+  {
+    q: "Is there a refund policy?",
+    a: "Yes — full details on the Refund Policy page. Short version: 7 days from first purchase if the service isn't what you expected, case-by-case after that.",
+  },
 ];
 
 const plans = [
@@ -169,6 +214,46 @@ export default function CoachingPage() {
             ))}
           </div>
 
+          {/* Comparison table — hidden on mobile, tiers above already communicate it */}
+          <div className="hidden md:block mt-16 overflow-hidden rounded-2xl border border-zinc-800 bg-black">
+            <div className="px-6 py-4 border-b border-zinc-800">
+              <h3 className="text-lg font-bold">Compare plans</h3>
+            </div>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-zinc-800 text-zinc-400">
+                  <th className="text-left font-medium px-6 py-3">Feature</th>
+                  <th className="text-center font-medium px-4 py-3">Starter</th>
+                  <th className="text-center font-medium px-4 py-3 text-amber-400">Pro</th>
+                  <th className="text-center font-medium px-4 py-3">Elite</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonRows.map((row) => (
+                  <tr key={row.label} className="border-b border-zinc-900 last:border-b-0">
+                    <td className="px-6 py-3 text-zinc-300">{row.label}</td>
+                    {(["starter", "pro", "elite"] as const).map((tier) => {
+                      const val = row[tier];
+                      return (
+                        <td key={tier} className="text-center px-4 py-3">
+                          {typeof val === "boolean" ? (
+                            val ? (
+                              <Check className="w-4 h-4 text-amber-400 inline" />
+                            ) : (
+                              <X className="w-4 h-4 text-zinc-600 inline" />
+                            )
+                          ) : (
+                            <span className="text-zinc-300">{val}</span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
           <div className="mt-12 max-w-3xl mx-auto text-center rounded-2xl border border-zinc-800 bg-black px-6 py-8">
             <h3 className="text-xl font-bold mb-2">Coach mentorship</h3>
             <p className="text-zinc-400 text-sm">
@@ -191,6 +276,29 @@ export default function CoachingPage() {
       </section>
 
       <section className="py-20 px-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-amber-400 font-semibold tracking-widest uppercase text-sm">FAQ</span>
+            <h2 className="text-3xl md:text-5xl font-bold mt-4">Common questions</h2>
+          </div>
+          <div className="space-y-4">
+            {faqs.map((item) => (
+              <details
+                key={item.q}
+                className="group rounded-2xl border border-zinc-800 bg-zinc-950 px-6 py-5 [&_summary::-webkit-details-marker]:hidden"
+              >
+                <summary className="flex cursor-pointer items-center justify-between text-left font-semibold text-white">
+                  {item.q}
+                  <span className="ml-4 text-amber-400 transition-transform group-open:rotate-45 text-2xl leading-none">+</span>
+                </summary>
+                <p className="mt-3 text-zinc-400 text-sm leading-relaxed">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-6 bg-zinc-950">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-6">Ready to Start?</h2>
           <p className="text-xl text-zinc-400 mb-10">Applications are open. Take the first step toward building your best self.</p>
