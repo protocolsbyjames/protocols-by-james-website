@@ -9,8 +9,9 @@ import { listBusyWindows, type BusyWindow } from "@/lib/google-calendar";
  *     (defaults to America/Los_Angeles). Weekends included — any personal
  *     time blocks sit on James's own calendar and get picked up as busy
  *     windows below.
- *   - We show the next 7 days of availability, starting at least 12 hours
- *     from now (no last-minute same-day bookings — gives James buffer time).
+ *   - We show the next 7 days of availability, starting at least 1 hour
+ *     from now. Same-day bookings allowed; the 1h buffer just keeps someone
+ *     from clicking a slot that's already starting.
  *   - Slots that overlap any Google Calendar busy window are dropped.
  *
  * Output is grouped by day in the booker's selected timezone so the UI can
@@ -33,7 +34,7 @@ export const DEFAULT_WORK_HOUR_START = 9; // 09:00 local
 export const DEFAULT_WORK_HOUR_END = 17; // 17:00 local (last slot starts 16:40)
 export const DEFAULT_TIMEZONE =
   process.env.PEPTALK_TIMEZONE ?? "America/Los_Angeles";
-export const LEAD_TIME_HOURS = 12;
+export const LEAD_TIME_HOURS = 1;
 export const LOOKAHEAD_DAYS = 7;
 
 export type Slot = {
