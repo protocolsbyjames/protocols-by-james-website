@@ -58,10 +58,10 @@ export default function Home() {
               Apply for Coaching <ArrowRight size={20} />
             </Link>
             <Link
-              href="/coaching#pricing"
-              className="border border-white/20 text-white px-8 py-4 rounded-md font-semibold text-lg hover:bg-white/5 transition-colors inline-flex items-center justify-center"
+              href="/peptalk/book"
+              className="border border-white/20 text-white px-8 py-4 rounded-md font-semibold text-lg hover:bg-white/5 transition-colors inline-flex items-center justify-center gap-2"
             >
-              View Programs
+              Book a Free Peptalk <ArrowRight size={20} />
             </Link>
           </div>
         </div>
@@ -187,15 +187,24 @@ export default function Home() {
             Ready to build your best self?
           </h2>
           <p className="text-gray-400 text-lg mb-10">
-            Stop guessing. Get a proven system, real accountability, and a coach 
-            who&apos;s been in your shoes. Applications are open.
+            Stop guessing. Get a proven system, real accountability, and a coach
+            who&apos;s been in your shoes. Not sure yet? Book a free 20-minute
+            peptalk and we&apos;ll map out your next step together.
           </p>
-          <Link
-            href="/coaching"
-            className="bg-amber-400 text-black px-8 py-4 rounded-md font-semibold text-lg hover:bg-amber-500 transition-colors inline-flex items-center justify-center gap-2"
-          >
-            Apply for Coaching <ArrowRight size={20} />
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/coaching"
+              className="bg-amber-400 text-black px-8 py-4 rounded-md font-semibold text-lg hover:bg-amber-500 transition-colors inline-flex items-center justify-center gap-2"
+            >
+              Apply for Coaching <ArrowRight size={20} />
+            </Link>
+            <Link
+              href="/peptalk/book"
+              className="border border-white/20 text-white px-8 py-4 rounded-md font-semibold text-lg hover:bg-white/5 transition-colors inline-flex items-center justify-center gap-2"
+            >
+              Book a Free Peptalk <ArrowRight size={20} />
+            </Link>
+          </div>
         </div>
       </section>
     </>
