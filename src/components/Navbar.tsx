@@ -35,7 +35,7 @@ export default function Navbar() {
           ))}
           <a
             href="https://app.protocolsbyjames.com"
-            className="text-sm bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-gray-200 transition-colors"
+            className="text-sm bg-amber-400 text-black px-4 py-2 rounded-md font-medium hover:bg-amber-500 transition-colors"
           >
             App
           </a>
@@ -63,7 +63,7 @@ export default function Navbar() {
           ))}
           <a
             href="https://app.protocolsbyjames.com"
-            className="block bg-white text-black px-4 py-2 rounded-md font-medium text-center hover:bg-gray-200 transition-colors"
+            className="block bg-amber-400 text-black px-4 py-2 rounded-md font-medium text-center hover:bg-amber-500 transition-colors"
           >
             App
           </a>

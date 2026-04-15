@@ -53,7 +53,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/coaching"
-              className="bg-white text-black px-8 py-4 rounded-md font-semibold text-lg hover:bg-gray-200 transition-colors inline-flex items-center justify-center gap-2"
+              className="bg-amber-400 text-black px-8 py-4 rounded-md font-semibold text-lg hover:bg-amber-500 transition-colors inline-flex items-center justify-center gap-2"
             >
               Apply for Coaching <ArrowRight size={20} />
             </Link>
@@ -136,7 +136,7 @@ export default function Home() {
               </p>
               <Link
                 href="/coaching"
-                className="bg-white text-black px-6 py-3 rounded-md font-semibold hover:bg-gray-200 transition-colors inline-flex items-center gap-2"
+                className="bg-amber-400 text-black px-6 py-3 rounded-md font-semibold hover:bg-amber-500 transition-colors inline-flex items-center gap-2"
               >
                 Learn More <ArrowRight size={18} />
               </Link>
@@ -192,7 +192,7 @@ export default function Home() {
           </p>
           <Link
             href="/coaching"
-            className="bg-white text-black px-8 py-4 rounded-md font-semibold text-lg hover:bg-gray-200 transition-colors inline-flex items-center justify-center gap-2"
+            className="bg-amber-400 text-black px-8 py-4 rounded-md font-semibold text-lg hover:bg-amber-500 transition-colors inline-flex items-center justify-center gap-2"
           >
             Apply for Coaching <ArrowRight size={20} />
           </Link>

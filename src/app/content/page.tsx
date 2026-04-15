@@ -29,7 +29,7 @@ export default function ContentPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-wrap gap-3 justify-center mb-12">
             {categories.map((cat) => (
-              <button key={cat} onClick={() => setActive(cat)} className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${active === cat ? "bg-amber-400 text-black" : "bg-zinc-900 text-zinc-400 hover:bg-zinc-800"}`}>
+              <button key={cat} onClick={() => setActive(cat)} className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${active === cat ? "bg-amber-400 text-black" : "bg-white/5 text-zinc-400 hover:bg-white/10"}`}>
                 {cat}
               </button>
             ))}
