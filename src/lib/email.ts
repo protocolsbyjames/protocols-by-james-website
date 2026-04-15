@@ -102,6 +102,133 @@ function coachHtml(p: SignedAgreementEmailParams): string {
   `;
 }
 
+/**
+ * Reminder emails for upcoming peptalks.
+ *
+ * Two cadences: a 24-hour "tomorrow" nudge and a 1-hour "starting soon"
+ * heads-up. Both go to the booker only (James has his own Google
+ * Calendar notifications — we don't want to double-ping him). The cron
+ * route at /api/cron/peptalk-reminders drives this; it calls into here
+ * once per booking and persists the sent timestamps so we never re-send
+ * the same reminder twice.
+ */
+export type PeptalkReminderKind = "24h" | "1h";
+
+export type PeptalkReminderEmailParams = {
+  clientName: string;
+  clientEmail: string;
+  /** Human-readable day label — e.g. "Wednesday, April 16". */
+  whenDay: string;
+  /** Human-readable time label — e.g. "10:20 AM PDT". */
+  whenTime: string;
+  meetLink: string | null;
+  kind: PeptalkReminderKind;
+};
+
+export async function sendPeptalkReminderEmail(
+  params: PeptalkReminderEmailParams,
+): Promise<void> {
+  const client = resend();
+  const subject =
+    params.kind === "24h"
+      ? `Your peptalk with James is tomorrow — ${params.whenTime}`
+      : `Your peptalk with James starts in 1 hour`;
+
+  await client.emails.send({
+    from: FROM_EMAIL,
+    to: params.clientEmail,
+    subject,
+    replyTo: JAMES_EMAIL,
+    html: reminderHtml(params),
+  });
+}
+
+function reminderHtml(p: PeptalkReminderEmailParams): string {
+  const hey = escapeHtml(firstName(p.clientName));
+  const day = escapeHtml(p.whenDay);
+  const time = escapeHtml(p.whenTime);
+  const intro =
+    p.kind === "24h"
+      ? `Quick heads up — our peptalk is <strong>tomorrow, ${day} at ${time}</strong>.`
+      : `Quick ping — our peptalk kicks off in about an hour (<strong>${time}</strong>).`;
+
+  const meetBlock = p.meetLink
+    ? `
+      <p>
+        <a href="${escapeHtml(p.meetLink)}"
+           style="display: inline-block; background: #f59e0b; color: #000;
+                  padding: 12px 24px; border-radius: 999px; text-decoration: none;
+                  font-weight: 600;">
+          Join Google Meet →
+        </a>
+      </p>
+      <p style="font-size: 12px; color: #666; word-break: break-all;">
+        Or copy this link: ${escapeHtml(p.meetLink)}
+      </p>
+    `
+    : `<p style="color: #666;">The Meet link is in the calendar invite I sent after you booked.</p>`;
+
+  return `
+    <div style="font-family: -apple-system, Segoe UI, sans-serif; color: #111; max-width: 560px;">
+      <p>Hey ${hey},</p>
+      <p>${intro}</p>
+      <p>Bring whatever you're stuck on — the more concrete, the better the call.</p>
+      ${meetBlock}
+      <p>See you soon.</p>
+      <p>— James</p>
+      <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;" />
+      <p style="font-size: 12px; color: #666;">
+        Can't make it? Just reply to this email and we'll reschedule.
+      </p>
+    </div>
+  `;
+}
+
+/**
+ * Notifies James whenever a new peptalk is booked. The signed-agreement
+ * email already hits his inbox as a paper trail, but this is a shorter
+ * heads-up with topic + booker context so he can scan it quickly.
+ */
+export type PeptalkBookedNotificationParams = {
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  topic: string;
+  whenDay: string;
+  whenTime: string;
+  meetLink: string | null;
+};
+
+export async function sendPeptalkBookedNotification(
+  p: PeptalkBookedNotificationParams,
+): Promise<void> {
+  const client = resend();
+  await client.emails.send({
+    from: FROM_EMAIL,
+    to: JAMES_EMAIL,
+    subject: `New peptalk booked: ${p.clientName} — ${p.whenDay} ${p.whenTime}`,
+    replyTo: p.clientEmail,
+    html: `
+      <div style="font-family: -apple-system, Segoe UI, sans-serif; color: #111; max-width: 560px;">
+        <p><strong>${escapeHtml(p.clientName)}</strong> just booked a peptalk.</p>
+        <ul>
+          <li><strong>When:</strong> ${escapeHtml(p.whenDay)} at ${escapeHtml(p.whenTime)}</li>
+          <li><strong>Email:</strong> ${escapeHtml(p.clientEmail)}</li>
+          <li><strong>Phone:</strong> ${escapeHtml(p.clientPhone)}</li>
+          ${p.meetLink ? `<li><strong>Meet:</strong> <a href="${escapeHtml(p.meetLink)}">${escapeHtml(p.meetLink)}</a></li>` : ""}
+        </ul>
+        <p><strong>Topic:</strong></p>
+        <blockquote style="border-left: 3px solid #f59e0b; padding-left: 12px; color: #333;">
+          ${escapeHtml(p.topic).replace(/\n/g, "<br />")}
+        </blockquote>
+        <p style="font-size: 12px; color: #666;">
+          The signed agreement PDF is in the companion email.
+        </p>
+      </div>
+    `,
+  });
+}
+
 function firstName(name: string): string {
   return name.trim().split(/\s+/)[0] || "there";
 }

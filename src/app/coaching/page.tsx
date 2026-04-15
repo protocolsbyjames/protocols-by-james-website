@@ -387,16 +387,16 @@ export default function CoachingPage() {
                   </span>{" "}
                   {plan.perfectFor}
                 </p>
-                <a
-                  href={`https://app.protocolsbyjames.com/signup`}
-                  className={`w-full text-center py-3 rounded-full font-bold transition-colors ${
+                <Link
+                  href={`/apply?plan=${encodeURIComponent(plan.name)}`}
+                  className={`w-full text-center py-3 rounded-full font-bold transition-colors block ${
                     plan.featured
                       ? "bg-amber-400 text-black hover:bg-amber-300"
                       : "bg-white/10 text-white hover:bg-white/20"
                   }`}
                 >
                   Start {plan.name}
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -567,7 +567,7 @@ export default function CoachingPage() {
             Applications are open.
           </p>
           <Link
-            href="/contact"
+            href="/apply"
             className="inline-flex items-center gap-2 bg-amber-400 text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-amber-300 transition-colors"
           >
             Apply Now <ArrowRight className="w-5 h-5" />

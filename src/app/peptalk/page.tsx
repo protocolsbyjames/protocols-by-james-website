@@ -7,8 +7,7 @@ export const metadata = {
     "Book a free 20-minute peptalk with James. No pressure, no pitch — just a real conversation about your goals and what it would take to hit them.",
 };
 
-// TODO: swap with real booking link (Cal.com / Calendly / SavvyCal) when James sets it up
-const BOOKING_URL = "https://cal.com/protocolsbyjames/peptalk";
+const BOOKING_URL = "/peptalk/book";
 
 export default function PeptalkPage() {
   return (
@@ -129,15 +128,13 @@ export default function PeptalkPage() {
               Book your peptalk below. If nothing on the calendar works, reach out directly
               and we&apos;ll find a time.
             </p>
-            <a
+            <Link
               href={BOOKING_URL}
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-amber-400 text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-amber-300 transition-colors"
             >
               Book your free peptalk
               <ArrowRight className="w-5 h-5" />
-            </a>
+            </Link>
             <p className="text-zinc-500 text-sm mt-6">
               Prefer to write first?{" "}
               <Link href="/contact" className="text-amber-400 hover:underline">
