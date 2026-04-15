@@ -145,7 +145,19 @@ export async function createBookingEvent(
       dateTime: params.endUtc.toISOString(),
       timeZone: params.timeZone,
     },
-    attendees: [{ email: params.clientEmail, displayName: params.clientName }],
+    // Include James as an explicit attendee so Google Calendar fires a
+    // "new event" push notification on his phone the moment a booking
+    // comes in. Without this, events created via his own OAuth look
+    // self-authored and gcal skips the notification. COACH_EMAIL lets
+    // him point this elsewhere without a code change.
+    attendees: [
+      { email: params.clientEmail, displayName: params.clientName },
+      {
+        email: process.env.COACH_EMAIL || "protocolsbyjames@gmail.com",
+        displayName: "James",
+        responseStatus: "accepted",
+      },
+    ],
     reminders: {
       useDefault: false,
       overrides: [
