@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-// lucide-react doesn't ship Instagram or TikTok marks, so inline the SVGs.
+// lucide-react doesn't ship brand marks, so inline the SVGs.
 function InstagramIcon({ size = 18 }: { size?: number }) {
   return (
     <svg
@@ -18,6 +18,36 @@ function InstagramIcon({ size = 18 }: { size?: number }) {
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z" />
       <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
+function YouTubeIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z" />
+    </svg>
+  );
+}
+
+function FacebookIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.51 1.49-3.89 3.77-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12Z" />
     </svg>
   );
 }
@@ -47,6 +77,16 @@ const socials = [
     href: "https://tiktok.com/@protocolsbyjames",
     label: "TikTok",
     icon: <TikTokIcon size={18} />,
+  },
+  {
+    href: "https://youtube.com/@ProtocolsByJames",
+    label: "YouTube",
+    icon: <YouTubeIcon size={18} />,
+  },
+  {
+    href: "https://www.facebook.com/profile.php?id=61573290748342",
+    label: "Facebook",
+    icon: <FacebookIcon size={18} />,
   },
 ];
 
@@ -118,6 +158,22 @@ export default function Footer() {
                 className="block text-sm text-gray-400 hover:text-white transition-colors"
               >
                 TikTok
+              </a>
+              <a
+                href="https://youtube.com/@ProtocolsByJames"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                YouTube
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61573290748342"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                Facebook
               </a>
             </div>
           </div>
