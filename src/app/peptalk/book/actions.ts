@@ -103,9 +103,13 @@ async function submitPeptalkBookingInner(formData: FormData) {
   });
 
   if (!parsed.success) {
-    errorRedirect(
-      "Some fields are missing or invalid. Double-check the form and try again.",
-    );
+    // Surface the offending field(s) in the error URL so the user can
+    // actually fix what's broken instead of re-guessing the whole form.
+    const issues = parsed.error.issues
+      .map((i) => `${i.path.join(".") || "form"}: ${i.message}`)
+      .join(" · ");
+    console.error("[peptalk-submit] validation failed", issues);
+    errorRedirect(`Check the form — ${issues}`);
   }
 
   const input = parsed.data;
