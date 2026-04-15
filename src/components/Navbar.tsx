@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/coaching", label: "Work With Me" },
+  { href: "/peptalk", label: "Free Peptalk" },
   { href: "/content", label: "Content" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
@@ -16,7 +17,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0b1227]/80 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold tracking-tight">
           JAMES
@@ -49,7 +50,7 @@ export default function Navbar() {
       </div>
 
       {isOpen && (
-        <div className="md:hidden bg-black/95 border-t border-white/10 px-6 py-6 space-y-4">
+        <div className="md:hidden bg-[#0b1227]/95 border-t border-white/10 px-6 py-6 space-y-4">
           {navLinks.map((link) => (
             <Link
               key={link.href}

@@ -17,7 +17,7 @@ export default function ContentPage() {
   const [active, setActive] = useState("All");
   const filtered = active === "All" ? posts : posts.filter((p) => p.category === active);
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-[#0b1227] text-white">
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <span className="text-amber-400 font-semibold tracking-widest uppercase text-sm">Learn</span>
@@ -36,7 +36,7 @@ export default function ContentPage() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((post) => (
-              <article key={post.title} className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 hover:border-amber-400/30 transition-colors group cursor-pointer">
+              <article key={post.title} className="bg-[#0d1628] border border-zinc-800 rounded-2xl p-6 hover:border-amber-400/30 transition-colors group cursor-pointer">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-xs font-medium text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full">{post.category}</span>
                   <span className="text-xs text-zinc-500 flex items-center gap-1"><Clock className="w-3 h-3" />{post.readTime}</span>

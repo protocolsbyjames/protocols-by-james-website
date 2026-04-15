@@ -37,7 +37,7 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center text-center px-6 pt-20">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0b1227] via-[#0b1227]/95 to-[#0b1227]" />
         <div className="relative z-10 max-w-4xl mx-auto">
           <p className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-6">
             Physique & Self-Optimization

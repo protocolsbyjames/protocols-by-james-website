@@ -181,7 +181,7 @@ const faqs = [
 
 export default function CoachingPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-[#0b1227] text-white">
       {/* Hero */}
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
@@ -200,7 +200,7 @@ export default function CoachingPage() {
       </section>
 
       {/* SELF-GUIDED PROGRAMS */}
-      <section id="programs" className="py-20 px-6 bg-zinc-950">
+      <section id="programs" className="py-20 px-6 bg-[#0d1628]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-amber-400 font-semibold tracking-widest uppercase text-sm">
@@ -219,7 +219,7 @@ export default function CoachingPage() {
             {programs.map((p) => (
               <div
                 key={p.name}
-                className="rounded-2xl border border-zinc-800 bg-black p-8 flex flex-col"
+                className="rounded-2xl border border-zinc-800 bg-[#0b1227] p-8 flex flex-col"
               >
                 <h3 className="text-2xl font-bold mb-2">{p.name}</h3>
                 <p className="text-zinc-400 text-sm mb-6">{p.tagline}</p>
@@ -299,7 +299,7 @@ export default function CoachingPage() {
       </section>
 
       {/* WHAT'S INCLUDED / FOR YOU IF */}
-      <section className="py-20 px-6 bg-zinc-950">
+      <section className="py-20 px-6 bg-[#0d1628]">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold mb-8">
@@ -354,7 +354,7 @@ export default function CoachingPage() {
                 className={`rounded-2xl border p-8 flex flex-col ${
                   plan.featured
                     ? "border-amber-400 bg-amber-400/5"
-                    : "border-zinc-800 bg-zinc-950"
+                    : "border-zinc-800 bg-[#0d1628]"
                 }`}
               >
                 {plan.featured && (
@@ -402,7 +402,7 @@ export default function CoachingPage() {
           </div>
 
           {/* Comparison table — Performance vs Elite */}
-          <div className="hidden md:block mt-16 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 max-w-4xl mx-auto">
+          <div className="hidden md:block mt-16 overflow-hidden rounded-2xl border border-zinc-800 bg-[#0d1628] max-w-4xl mx-auto">
             <div className="px-6 py-4 border-b border-zinc-800">
               <h3 className="text-lg font-bold">
                 Performance vs. Elite — side by side
@@ -455,7 +455,7 @@ export default function CoachingPage() {
           </div>
 
           {/* VIP COMMUNITY ADD-ON */}
-          <div className="mt-16 max-w-3xl mx-auto rounded-2xl border border-zinc-800 bg-zinc-950 p-8">
+          <div className="mt-16 max-w-3xl mx-auto rounded-2xl border border-zinc-800 bg-[#0d1628] p-8">
             <div className="flex items-start gap-4 mb-4">
               <div className="w-12 h-12 rounded-xl bg-amber-400/10 flex items-center justify-center flex-shrink-0">
                 <Users className="w-6 h-6 text-amber-400" />
@@ -481,7 +481,7 @@ export default function CoachingPage() {
           </div>
 
           {/* COACH MENTORSHIP */}
-          <div className="mt-8 max-w-3xl mx-auto text-center rounded-2xl border border-zinc-800 bg-zinc-950 px-6 py-8">
+          <div className="mt-8 max-w-3xl mx-auto text-center rounded-2xl border border-zinc-800 bg-[#0d1628] px-6 py-8">
             <h3 className="text-xl font-bold mb-2">Coach mentorship</h3>
             <p className="text-zinc-400 text-sm">
               For aspiring fitness coaches who want 1-on-1 mentorship.
@@ -525,7 +525,7 @@ export default function CoachingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 px-6 bg-zinc-950">
+      <section className="py-20 px-6 bg-[#0d1628]">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-amber-400 font-semibold tracking-widest uppercase text-sm">
@@ -539,7 +539,7 @@ export default function CoachingPage() {
             {faqs.map((item) => (
               <details
                 key={item.q}
-                className="group rounded-2xl border border-zinc-800 bg-black px-6 py-5 [&_summary::-webkit-details-marker]:hidden"
+                className="group rounded-2xl border border-zinc-800 bg-[#0b1227] px-6 py-5 [&_summary::-webkit-details-marker]:hidden"
               >
                 <summary className="flex cursor-pointer items-center justify-between text-left font-semibold text-white">
                   {item.q}

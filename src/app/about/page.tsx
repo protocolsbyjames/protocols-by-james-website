@@ -10,7 +10,7 @@ const values = [
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-[#0b1227] text-white">
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <span className="text-amber-400 font-semibold tracking-widest uppercase text-sm">About</span>
@@ -18,7 +18,7 @@ export default function AboutPage() {
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto">How a personal transformation turned into a mission to help others build their best selves.</p>
         </div>
       </section>
-      <section className="py-20 px-6 bg-zinc-950">
+      <section className="py-20 px-6 bg-[#0d1628]">
         <div className="max-w-3xl mx-auto space-y-6 text-zinc-300 text-lg leading-relaxed">
           <p>I didn’t start out with all the answers. Like most people, I spent years spinning my wheels — following generic programs, falling for supplement hype, and wondering why nothing seemed to stick.</p>
           <p>The turning point came when I stopped looking for shortcuts and started treating self-optimization like a science. I dove deep into training methodology, nutrition science, bloodwork analysis, and recovery protocols. I experimented on myself, tracked everything, and slowly built a system that actually worked.</p>
@@ -43,7 +43,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      <section className="py-20 px-6 bg-zinc-950">
+      <section className="py-20 px-6 bg-[#0d1628]">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-6">Want to Work Together?</h2>
           <p className="text-xl text-zinc-400 mb-10">If you’re serious about transforming your physique and optimizing your life, I’d love to help.</p>

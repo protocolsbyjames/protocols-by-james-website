@@ -40,7 +40,7 @@ export default function ContactPage() {
 
   if (submitted) {
     return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
+      <main className="min-h-screen bg-[#0b1227] text-white flex items-center justify-center px-6">
         <div className="text-center">
           <div className="w-20 h-20 rounded-full bg-amber-400/10 flex items-center justify-center mx-auto mb-6">
             <Send className="w-9 h-9 text-amber-400" />
@@ -53,7 +53,7 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-[#0b1227] text-white">
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <span className="text-amber-400 font-semibold tracking-widest uppercase text-sm">Contact</span>
@@ -72,7 +72,7 @@ export default function ContactPage() {
                 required
                 value={form.name}
                 onChange={(e) => setForm({...form, name: e.target.value})}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors"
+                className="w-full bg-[#0d1628] border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors"
                 placeholder="Your name"
               />
             </div>
@@ -83,7 +83,7 @@ export default function ContactPage() {
                 required
                 value={form.email}
                 onChange={(e) => setForm({...form, email: e.target.value})}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors"
+                className="w-full bg-[#0d1628] border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors"
                 placeholder="you@email.com"
               />
             </div>
@@ -92,7 +92,7 @@ export default function ContactPage() {
               <select
                 value={form.interest}
                 onChange={(e) => setForm({...form, interest: e.target.value})}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors"
+                className="w-full bg-[#0d1628] border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors"
               >
                 <option>General Inquiry</option>
                 <option>Coaching Application</option>
@@ -107,7 +107,7 @@ export default function ContactPage() {
                 rows={5}
                 value={form.message}
                 onChange={(e) => setForm({...form, message: e.target.value})}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors resize-none"
+                className="w-full bg-[#0d1628] border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400 transition-colors resize-none"
                 placeholder="Tell me about your goals..."
               />
             </div>
@@ -154,7 +154,7 @@ export default function ContactPage() {
                 </a>
               </div>
             </div>
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6">
+            <div className="bg-[#0d1628] border border-zinc-800 rounded-2xl p-6">
               <h3 className="text-lg font-bold mb-2">Ready for coaching?</h3>
               <p className="text-zinc-400 text-sm mb-4">Skip the form and go straight to the coaching page to learn more about Protocols by James.</p>
               <a href="/coaching" className="text-amber-400 font-medium text-sm hover:underline">View Coaching →</a>

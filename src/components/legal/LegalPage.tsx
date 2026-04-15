@@ -12,7 +12,7 @@ export default function LegalPage({
   children: ReactNode;
 }) {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-[#0b1227] text-white">
       <section className="pt-32 pb-12 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <span className="text-amber-400 font-semibold tracking-widest uppercase text-sm">

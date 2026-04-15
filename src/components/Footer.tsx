@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black">
+    <footer className="border-t border-white/10 bg-[#0b1227]">
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
           <div className="md:col-span-2">
@@ -23,6 +23,7 @@ export default function Footer() {
             <h4 className="font-semibold text-sm mb-4 text-gray-300 uppercase tracking-wider">Pages</h4>
             <div className="space-y-2">
               <Link href="/coaching" className="block text-sm text-gray-400 hover:text-white transition-colors">Work With Me</Link>
+              <Link href="/peptalk" className="block text-sm text-gray-400 hover:text-white transition-colors">Free Peptalk</Link>
               <Link href="/content" className="block text-sm text-gray-400 hover:text-white transition-colors">Content</Link>
               <Link href="/about" className="block text-sm text-gray-400 hover:text-white transition-colors">About</Link>
               <Link href="/contact" className="block text-sm text-gray-400 hover:text-white transition-colors">Contact</Link>
