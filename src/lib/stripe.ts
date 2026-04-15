@@ -1,8 +1,19 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  typescript: true,
-});
+/**
+ * Lazy Stripe client — avoids instantiating at module load, which breaks
+ * Vercel's build-time page data collection when env vars aren't injected yet.
+ * See supabase-admin.ts and email.ts for the same pattern.
+ */
+let _stripe: Stripe | null = null;
+
+export function stripe(): Stripe {
+  if (_stripe) return _stripe;
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error("STRIPE_SECRET_KEY is not set");
+  _stripe = new Stripe(key, { typescript: true });
+  return _stripe;
+}
 
 /**
  * Marketing site's Stripe convention:
@@ -16,7 +27,7 @@ export async function createStripeCustomerForUser(params: {
   email: string;
   fullName: string;
 }): Promise<string> {
-  const customer = await stripe.customers.create({
+  const customer = await stripe().customers.create({
     email: params.email,
     name: params.fullName,
     metadata: { supabase_user_id: params.userId },

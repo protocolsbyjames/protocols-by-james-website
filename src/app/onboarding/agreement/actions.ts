@@ -51,7 +51,7 @@ export async function resolveOnboardingContext(
 
   // ---------- Path 1: Stripe session id on the URL ----------
   if (stripeSessionId) {
-    const session = await stripe.checkout.sessions.retrieve(stripeSessionId, {
+    const session = await stripe().checkout.sessions.retrieve(stripeSessionId, {
       expand: ["customer"],
     });
 
