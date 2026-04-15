@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useFormStatus } from "react-dom";
 import { ArrowRight, Calendar, Clock, Lock, Shield } from "lucide-react";
 import {
   AGREEMENT_TITLE,
@@ -382,17 +383,31 @@ export default function BookingFlow({
             <Lock className="w-3.5 h-3.5" />
             <span>Your signed copy lands in your inbox after booking</span>
           </div>
-          <button
-            type="submit"
-            disabled={!selectedSlot}
-            className="w-full sm:w-auto bg-amber-400 text-black px-8 py-3.5 rounded-full font-bold hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Book Pep-Talk
-            <ArrowRight className="w-5 h-5" />
-          </button>
+          <SubmitButton disabled={!selectedSlot} />
         </div>
       </form>
     </div>
+  );
+}
+
+/**
+ * Submit button that disables itself the instant the form is in flight.
+ * Without this, a double-click fires two server actions: the first one
+ * wins, the second hits the `slotIsStillFree` gcal recheck and errors out
+ * with "someone else booked this slot" — even though the real booker was
+ * themselves. `useFormStatus` must be read inside a child of the <form>.
+ */
+function SubmitButton({ disabled }: { disabled: boolean }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={disabled || pending}
+      className="w-full sm:w-auto bg-amber-400 text-black px-8 py-3.5 rounded-full font-bold hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {pending ? "Booking..." : "Book Pep-Talk"}
+      {!pending && <ArrowRight className="w-5 h-5" />}
+    </button>
   );
 }
 

@@ -19,11 +19,16 @@ const FROM_EMAIL = "Protocols by James <protocolsbyjames@gmail.com>";
 /**
  * Gmail aggressively filters messages where `from` and `to` are the same
  * address — the message routes silently to Sent/hidden instead of Inbox.
- * Using Gmail plus-addressing (`+bookings`) keeps it in the same inbox but
- * looks like a different recipient to the delivery filter, so it actually
- * shows up. When James moves to a pro domain, drop this suffix.
+ * Plus-addressing (`+bookings`) *sometimes* bypasses this but Gmail strips
+ * the suffix before the self-send check, so delivery is flaky.
+ *
+ * The reliable fix is to send notifications to a completely different
+ * address. Set COACH_NOTIFY_EMAIL in env (e.g. a personal gmail, or any
+ * inbox James actually checks) and that takes precedence. Falls back to
+ * the plus-addressed gmail for dev.
  */
-const JAMES_NOTIFY_EMAIL = "protocolsbyjames+bookings@gmail.com";
+const JAMES_NOTIFY_EMAIL =
+  process.env.COACH_NOTIFY_EMAIL || "protocolsbyjames+bookings@gmail.com";
 
 function resend(): Resend {
   const key = process.env.RESEND_API_KEY;
