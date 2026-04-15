@@ -16,6 +16,7 @@ import {
   sendSignedAgreementEmail,
   sendPeptalkBookedNotification,
 } from "@/lib/email";
+import { sendCoachSms, formatPeptalkBookedSms } from "@/lib/sms";
 import {
   createBookingEvent,
   cancelBookingEvent,
@@ -273,6 +274,31 @@ async function submitPeptalkBookingInner(formData: FormData) {
     });
   } catch (e) {
     console.error("Peptalk booked notification failed (non-fatal):", e);
+  }
+
+  // Fire-and-forget SMS to James's phone so he sees bookings in real time
+  // even without checking email. No-ops if Twilio env vars aren't set.
+  try {
+    const coachTz = process.env.COACH_TIMEZONE || "America/Chicago";
+    const smsWhen = new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: coachTz,
+    }).format(start);
+    await sendCoachSms(
+      formatPeptalkBookedSms({
+        clientName: input.fullName,
+        whenLabel: smsWhen,
+        clientPhone: input.phone,
+        topic: input.topic,
+      }),
+    );
+  } catch (e) {
+    console.error("Coach SMS failed (non-fatal):", e);
   }
 
   // ---------- 7. Confirm the booking row ----------
