@@ -5,9 +5,11 @@ import { listBusyWindows, type BusyWindow } from "@/lib/google-calendar";
  *
  * Business rules (tweak these without touching the UI):
  *   - Peptalks are 20 minutes long.
- *   - James's working hours are Mon–Fri 09:00–17:00 in PEPTALK_TIMEZONE
- *     (defaults to America/Los_Angeles since Pacific Ventures is a CA LLC).
- *   - We show the next 14 days of availability, starting at least 12 hours
+ *   - James takes peptalks 7 days a week, 09:00–17:00 in PEPTALK_TIMEZONE
+ *     (defaults to America/Los_Angeles). Weekends included — any personal
+ *     time blocks sit on James's own calendar and get picked up as busy
+ *     windows below.
+ *   - We show the next 7 days of availability, starting at least 12 hours
  *     from now (no last-minute same-day bookings — gives James buffer time).
  *   - Slots that overlap any Google Calendar busy window are dropped.
  *
@@ -32,7 +34,7 @@ export const DEFAULT_WORK_HOUR_END = 17; // 17:00 local (last slot starts 16:40)
 export const DEFAULT_TIMEZONE =
   process.env.PEPTALK_TIMEZONE ?? "America/Los_Angeles";
 export const LEAD_TIME_HOURS = 12;
-export const LOOKAHEAD_DAYS = 14;
+export const LOOKAHEAD_DAYS = 7;
 
 export type Slot = {
   /** ISO timestamp at UTC — what gets persisted / passed to gcal. */
@@ -105,15 +107,6 @@ function dateKeyIn(date: Date, tz: string): string {
   return fmt.format(date);
 }
 
-function weekdayIn(date: Date, tz: string): number {
-  // 0 = Sunday, 6 = Saturday
-  const name = new Intl.DateTimeFormat("en-US", {
-    timeZone: tz,
-    weekday: "short",
-  }).format(date);
-  return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(name);
-}
-
 function prettyDayLabel(dateKey: string): string {
   // dateKey is "YYYY-MM-DD" in target tz; formatting it as UTC gives us the
   // same calendar day back without timezone drift.
@@ -180,9 +173,6 @@ export async function listAvailablePeptalkSlots(opts?: {
     const dateKey = dateKeyIn(probe, tz);
     // dedupe in case DST boundary caused two probes to map to same day
     if (groups.some((g) => g.dateKey === dateKey)) continue;
-
-    const weekday = weekdayIn(probe, tz);
-    if (weekday === 0 || weekday === 6) continue; // skip weekends
 
     const [y, m, d] = dateKey.split("-").map(Number);
     const daySlots: Slot[] = [];
