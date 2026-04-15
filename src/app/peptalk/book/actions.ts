@@ -67,6 +67,27 @@ function errorRedirect(msg: string): never {
 }
 
 export async function submitPeptalkBooking(formData: FormData) {
+  try {
+    return await submitPeptalkBookingInner(formData);
+  } catch (e) {
+    // Let redirect() throws (NEXT_REDIRECT) propagate — those are control flow,
+    // not errors. Everything else: log loudly and send the user to the book
+    // page with a diagnostic message so we don't hit the generic 500.
+    const err = e as { digest?: string; message?: string; stack?: string };
+    if (typeof err?.digest === "string" && err.digest.startsWith("NEXT_REDIRECT")) {
+      throw e;
+    }
+    console.error("[peptalk-submit] UNCAUGHT", {
+      message: err?.message,
+      stack: err?.stack,
+    });
+    errorRedirect(
+      "Something went wrong on our end. James has been notified — please try once more or email hello@protocolsbyjames.com.",
+    );
+  }
+}
+
+async function submitPeptalkBookingInner(formData: FormData) {
   // ---------- 1. Validate ----------
   const parsed = BookingSchema.safeParse({
     fullName: formData.get("fullName"),
@@ -99,6 +120,11 @@ export async function submitPeptalkBooking(formData: FormData) {
     errorRedirect("That slot is in the past. Please pick another one.");
   }
 
+  console.log("[peptalk-submit] stage=validated", {
+    email: input.email,
+    start: input.startUtc,
+  });
+
   // ---------- 2. Re-check availability ----------
   const stillFree = await slotIsStillFree({
     startUtc: input.startUtc,
@@ -110,6 +136,8 @@ export async function submitPeptalkBooking(formData: FormData) {
       "Someone just grabbed that slot. Pick another time and you're good.",
     );
   }
+
+  console.log("[peptalk-submit] stage=slot-confirmed");
 
   const admin = supabaseAdmin();
 
@@ -146,6 +174,7 @@ export async function submitPeptalkBooking(formData: FormData) {
   }
 
   const bookingId = bookingRow!.id;
+  console.log("[peptalk-submit] stage=booking-inserted", { bookingId });
 
   // ---------- 4. Insert agreement row ----------
   const { error: agreementErr } = await admin
@@ -170,6 +199,8 @@ export async function submitPeptalkBooking(formData: FormData) {
     errorRedirect("Couldn't save your signature. Please try again.");
   }
 
+  console.log("[peptalk-submit] stage=agreement-inserted", { bookingId });
+
   // ---------- 5. Create Google Calendar event ----------
   let gcalEventId: string | null = null;
   let meetLink: string | null = null;
@@ -185,6 +216,7 @@ export async function submitPeptalkBooking(formData: FormData) {
     });
     gcalEventId = created.eventId;
     meetLink = created.meetLink;
+    console.log("[peptalk-submit] stage=gcal-created", { gcalEventId, meetLink });
   } catch (e) {
     console.error("Failed to create gcal event for peptalk:", e);
     await admin
@@ -274,6 +306,8 @@ export async function submitPeptalkBooking(formData: FormData) {
   // Rollback the gcal event only if we hit catastrophic DB state AND the
   // caller needs to see an error. That's not this code path, so we skip.
   void cancelBookingEvent; // keep import for future rollback wiring
+
+  console.log("[peptalk-submit] stage=confirmed", { bookingId, emailFailed });
 
   // ---------- 8. Redirect to the confirmation page ----------
   const params = new URLSearchParams({ id: bookingId });
