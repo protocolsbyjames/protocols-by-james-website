@@ -30,7 +30,7 @@ import { listBusyWindows, type BusyWindow } from "@/lib/google-calendar";
 
 export const PEPTALK_DURATION_MIN = 20;
 export const DEFAULT_WORK_HOUR_START = 8; // 08:00 local
-export const DEFAULT_WORK_HOUR_END = 21; // 21:00 local (last slot starts 20:40)
+export const DEFAULT_WORK_HOUR_END = 20; // 20:00 local (last slot starts 19:40)
 export const DEFAULT_TIMEZONE =
   process.env.PEPTALK_TIMEZONE ?? "America/Chicago";
 export const LEAD_TIME_HOURS = 0;
