@@ -61,7 +61,7 @@ export default function Home() {
               href="/peptalk/book"
               className="border border-white/20 text-white px-8 py-4 rounded-md font-semibold text-lg hover:bg-white/5 transition-colors inline-flex items-center justify-center gap-2"
             >
-              Book a Free Peptalk <ArrowRight size={20} />
+              Book a Free Pep-Talk <ArrowRight size={20} />
             </Link>
           </div>
         </div>
@@ -189,7 +189,7 @@ export default function Home() {
           <p className="text-gray-400 text-lg mb-10">
             Stop guessing. Get a proven system, real accountability, and a coach
             who&apos;s been in your shoes. Not sure yet? Book a free 20-minute
-            peptalk and we&apos;ll map out your next step together.
+            Pep-Talk and we&apos;ll map out your next step together.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -202,7 +202,7 @@ export default function Home() {
               href="/peptalk/book"
               className="border border-white/20 text-white px-8 py-4 rounded-md font-semibold text-lg hover:bg-white/5 transition-colors inline-flex items-center justify-center gap-2"
             >
-              Book a Free Peptalk <ArrowRight size={20} />
+              Book a Free Pep-Talk <ArrowRight size={20} />
             </Link>
           </div>
         </div>

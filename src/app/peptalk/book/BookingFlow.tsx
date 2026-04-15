@@ -387,7 +387,7 @@ export default function BookingFlow({
             disabled={!selectedSlot}
             className="w-full sm:w-auto bg-amber-400 text-black px-8 py-3.5 rounded-full font-bold hover:bg-amber-300 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Book peptalk
+            Book Pep-Talk
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>

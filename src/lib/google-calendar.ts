@@ -130,9 +130,9 @@ export async function createBookingEvent(
   const requestId = `peptalk-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 
   const event: calendar_v3.Schema$Event = {
-    summary: `Peptalk — ${params.clientName}`,
+    summary: `Pep-Talk — ${params.clientName}`,
     description:
-      `Free peptalk booked via protocolsbyjames.com\n\n` +
+      `Free Pep-Talk booked via protocolsbyjames.com\n\n` +
       `Name: ${params.clientName}\n` +
       `Email: ${params.clientEmail}\n` +
       `Phone: ${params.clientPhone}\n\n` +

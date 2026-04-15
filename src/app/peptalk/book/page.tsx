@@ -13,7 +13,7 @@ import { submitPeptalkBooking } from "./actions";
  */
 
 export const metadata = {
-  title: "Book your free peptalk · Protocols by James",
+  title: "Book your free Pep-Talk · Protocols by James",
   description:
     "Pick a time, sign a quick waiver, jump on a 20-minute Google Meet with James. Free, no pitch.",
 };
@@ -54,7 +54,7 @@ export default async function BookPeptalkPage({
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-            Book your <span className="text-amber-400">peptalk</span>.
+            Book your <span className="text-amber-400">Pep-Talk</span>.
           </h1>
           <p className="text-lg text-zinc-400 max-w-xl mx-auto">
             Pick a time, sign a quick waiver, and I&apos;ll see you on Meet.

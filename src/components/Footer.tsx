@@ -127,7 +127,7 @@ export default function Footer() {
             <h4 className="font-semibold text-sm mb-4 text-gray-300 uppercase tracking-wider">Pages</h4>
             <div className="space-y-2">
               <Link href="/coaching" className="block text-sm text-gray-400 hover:text-white transition-colors">Work With Me</Link>
-              <Link href="/peptalk" className="block text-sm text-gray-400 hover:text-white transition-colors">Free Peptalk</Link>
+              <Link href="/peptalk" className="block text-sm text-gray-400 hover:text-white transition-colors">Free Pep-Talk</Link>
               <Link href="/content" className="block text-sm text-gray-400 hover:text-white transition-colors">Content</Link>
               <Link href="/about" className="block text-sm text-gray-400 hover:text-white transition-colors">About</Link>
               <Link href="/contact" className="block text-sm text-gray-400 hover:text-white transition-colors">Contact</Link>

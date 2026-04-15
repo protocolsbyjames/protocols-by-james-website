@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Phone, Check, MessageCircle, Clock, Calendar, ArrowRight } from "lucide-react";
 
 export const metadata = {
-  title: "Free Peptalk · Protocols by James",
+  title: "Free Pep-Talk · Protocols by James",
   description:
-    "Book a free 20-minute peptalk with James. No pressure, no pitch — just a real conversation about your goals and what it would take to hit them.",
+    "Book a free 20-minute Pep-Talk with James. No pressure, no pitch — just a real conversation about your goals and what it would take to hit them.",
 };
 
 const BOOKING_URL = "/peptalk/book";
@@ -22,7 +22,7 @@ export default function PeptalkPage() {
             </span>
           </div>
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Book a <span className="text-amber-400">free peptalk</span>.
+            Book a <span className="text-amber-400">free Pep-Talk</span>.
           </h1>
           <p className="text-xl md:text-2xl text-zinc-400 max-w-2xl mx-auto">
             20 minutes. Me and you. No slides, no sales script. Just a real conversation about
@@ -36,7 +36,7 @@ export default function PeptalkPage() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-amber-400 font-semibold tracking-widest uppercase text-sm">
-              What&apos;s a peptalk?
+              What&apos;s a Pep-Talk?
             </span>
             <h2 className="text-4xl md:text-5xl font-bold mt-3">A real talk, not a sales call.</h2>
           </div>
@@ -125,14 +125,14 @@ export default function PeptalkPage() {
               Ready to <span className="text-amber-400">talk</span>?
             </h2>
             <p className="text-lg text-zinc-400 mb-8 max-w-xl mx-auto">
-              Book your peptalk below. If nothing on the calendar works, reach out directly
+              Book your Pep-Talk below. If nothing on the calendar works, reach out directly
               and we&apos;ll find a time.
             </p>
             <Link
               href={BOOKING_URL}
               className="inline-flex items-center gap-2 bg-amber-400 text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-amber-300 transition-colors"
             >
-              Book your free peptalk
+              Book your free Pep-Talk
               <ArrowRight className="w-5 h-5" />
             </Link>
             <p className="text-zinc-500 text-sm mt-6">
@@ -166,7 +166,7 @@ export default function PeptalkPage() {
               are yours.
             </Faq>
             <Faq q="What if I just have questions about supplements or peptides?">
-              Totally fair. Those questions live in the peptalk, and for deeper protocol
+              Totally fair. Those questions live in the Pep-Talk, and for deeper protocol
               discussion I run a community with weekly breakdowns. Ask me on the call.
             </Faq>
             <Faq q="Can I bring a specific workout, blood panel, or protocol to review?">
@@ -175,7 +175,7 @@ export default function PeptalkPage() {
             </Faq>
             <Faq q="What won't you do on this call?">
               I won&apos;t diagnose, prescribe, or tell you to stop taking anything your doctor
-              put you on. Peptalks are educational. For medical decisions, your physician runs
+              put you on. Pep-Talks are educational. For medical decisions, your physician runs
               point.
             </Faq>
           </div>

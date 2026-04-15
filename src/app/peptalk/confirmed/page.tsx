@@ -5,8 +5,8 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { DEFAULT_TIMEZONE } from "@/lib/peptalk-slots";
 
 export const metadata = {
-  title: "Peptalk booked · Protocols by James",
-  description: "Your peptalk is locked in. Check your email for the details.",
+  title: "Pep-Talk booked · Protocols by James",
+  description: "Your Pep-Talk is locked in. Check your email for the details.",
 };
 
 export const dynamic = "force-dynamic";

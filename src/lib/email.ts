@@ -140,8 +140,8 @@ export async function sendPeptalkReminderEmail(
   const client = resend();
   const subject =
     params.kind === "24h"
-      ? `Your peptalk with James is tomorrow — ${params.whenTime}`
-      : `Your peptalk with James starts in 1 hour`;
+      ? `Your Pep-Talk with James is tomorrow — ${params.whenTime}`
+      : `Your Pep-Talk with James starts in 1 hour`;
 
   await client.emails.send({
     from: FROM_EMAIL,
@@ -158,8 +158,8 @@ function reminderHtml(p: PeptalkReminderEmailParams): string {
   const time = escapeHtml(p.whenTime);
   const intro =
     p.kind === "24h"
-      ? `Quick heads up — our peptalk is <strong>tomorrow, ${day} at ${time}</strong>.`
-      : `Quick ping — our peptalk kicks off in about an hour (<strong>${time}</strong>).`;
+      ? `Quick heads up — our Pep-Talk is <strong>tomorrow, ${day} at ${time}</strong>.`
+      : `Quick ping — our Pep-Talk kicks off in about an hour (<strong>${time}</strong>).`;
 
   const meetBlock = p.meetLink
     ? `
@@ -224,7 +224,7 @@ export async function sendPeptalkBookedNotification(
   const coachWhen = formatWhen(p.startUtc, coachTz);
   const sameTz = p.clientTimeZone === coachTz;
 
-  const subject = `New peptalk booked: ${p.clientName} — ${coachWhen.day} ${coachWhen.time}`;
+  const subject = `New Pep-Talk booked: ${p.clientName} — ${coachWhen.day} ${coachWhen.time}`;
 
   await client.emails.send({
     from: FROM_EMAIL,
@@ -233,7 +233,7 @@ export async function sendPeptalkBookedNotification(
     replyTo: p.clientEmail,
     html: `
       <div style="font-family: -apple-system, Segoe UI, sans-serif; color: #111; max-width: 560px;">
-        <p><strong>${escapeHtml(p.clientName)}</strong> just booked a peptalk.</p>
+        <p><strong>${escapeHtml(p.clientName)}</strong> just booked a Pep-Talk.</p>
         <ul>
           <li><strong>Your time:</strong> ${escapeHtml(coachWhen.day)} at ${escapeHtml(coachWhen.time)}</li>
           ${sameTz ? "" : `<li><strong>Their time:</strong> ${escapeHtml(clientWhen.day)} at ${escapeHtml(clientWhen.time)} (${escapeHtml(p.clientTimeZone)})</li>`}
