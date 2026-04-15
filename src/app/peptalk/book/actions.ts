@@ -258,28 +258,17 @@ async function submitPeptalkBookingInner(formData: FormData) {
   }
 
   // Short heads-up to James's inbox. Non-fatal: if it fails, the signed
-  // agreement email (above) already carries the booking details.
+  // agreement email (above) already carries the booking details. The
+  // email helper formats the time in both the client's tz and James's
+  // coach tz (COACH_TIMEZONE, defaults to America/Chicago).
   try {
-    const when = new Intl.DateTimeFormat("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      timeZone: input.timezone,
-    }).format(start);
-    const whenTime = new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-      timeZoneName: "short",
-      timeZone: input.timezone,
-    }).format(start);
     await sendPeptalkBookedNotification({
       clientName: input.fullName,
       clientEmail: input.email,
       clientPhone: input.phone,
       topic: input.topic,
-      whenDay: when,
-      whenTime,
+      startUtc: start,
+      clientTimeZone: input.timezone,
       meetLink,
     });
   } catch (e) {

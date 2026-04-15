@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Calendar, Clock, Lock, Shield } from "lucide-react";
 import {
   AGREEMENT_TITLE,
@@ -9,6 +9,63 @@ import {
   AGREEMENT_SECTIONS,
 } from "@/lib/agreement";
 import type { DayGroup } from "@/lib/peptalk-slots";
+
+/**
+ * Reformat server-rendered slot labels into the booker's actual browser
+ * timezone. The `startUtc` / `endUtc` fields are absolute and never change
+ * — only the wall-clock label and the day-grouping key do. We also need to
+ * re-group slots by day *in the user's tz*, because a 9am-5pm LA window
+ * might span a day boundary for someone east of UTC.
+ */
+function reformatGroupsForTz(
+  serverGroups: DayGroup[],
+  tz: string,
+): DayGroup[] {
+  const timeFmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: tz,
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+  const dateKeyFmt = new Intl.DateTimeFormat("en-CA", {
+    timeZone: tz,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const dayLabelFmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: tz,
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+  });
+
+  const byKey = new Map<string, DayGroup>();
+  for (const g of serverGroups) {
+    for (const s of g.slots) {
+      const start = new Date(s.startUtc);
+      const key = dateKeyFmt.format(start);
+      const reformatted = {
+        startUtc: s.startUtc,
+        endUtc: s.endUtc,
+        label: timeFmt.format(start),
+      };
+      const existing = byKey.get(key);
+      if (existing) {
+        existing.slots.push(reformatted);
+      } else {
+        byKey.set(key, {
+          dateKey: key,
+          label: dayLabelFmt.format(start),
+          slots: [reformatted],
+        });
+      }
+    }
+  }
+  return Array.from(byKey.values()).sort((a, b) =>
+    a.dateKey.localeCompare(b.dateKey),
+  );
+}
 
 /**
  * Client component for the /peptalk/book interactive flow.
@@ -27,16 +84,47 @@ import type { DayGroup } from "@/lib/peptalk-slots";
  */
 export default function BookingFlow({
   groupedSlots,
-  timezone,
+  timezone: serverTimezone,
   submitAction,
 }: {
   groupedSlots: DayGroup[];
+  /** Server-rendered fallback tz — replaced by the browser's IANA tz on mount. */
   timezone: string;
   submitAction: (formData: FormData) => Promise<void>;
 }) {
+  // Detect the browser's actual IANA tz (e.g. "America/Chicago") and use
+  // it for both display AND the hidden form field. Starts as the server
+  // fallback so the initial SSR markup is stable, then swaps on mount.
+  const [clientTimezone, setClientTimezone] = useState<string>(serverTimezone);
+  useEffect(() => {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (tz) setClientTimezone(tz);
+    } catch {
+      // Fall back to server tz if Intl misbehaves.
+    }
+  }, []);
+
+  // Re-format the slot labels + day groupings in the detected tz. Until
+  // the effect runs, we use the server's pre-formatted groups so there's
+  // no flash of empty picker.
+  const effectiveGroups = useMemo(() => {
+    if (clientTimezone === serverTimezone) return groupedSlots;
+    return reformatGroupsForTz(groupedSlots, clientTimezone);
+  }, [groupedSlots, clientTimezone, serverTimezone]);
+
   const [selectedDay, setSelectedDay] = useState<string>(
     groupedSlots[0]?.dateKey ?? "",
   );
+
+  // If the tz detection re-groups days, the previously-selected day key
+  // may no longer exist — fall back to the first available one.
+  useEffect(() => {
+    if (!effectiveGroups.some((g) => g.dateKey === selectedDay)) {
+      setSelectedDay(effectiveGroups[0]?.dateKey ?? "");
+    }
+  }, [effectiveGroups, selectedDay]);
+
   const [selectedSlot, setSelectedSlot] = useState<{
     startUtc: string;
     endUtc: string;
@@ -44,7 +132,7 @@ export default function BookingFlow({
     dayLabel: string;
   } | null>(null);
 
-  const activeDay = groupedSlots.find((g) => g.dateKey === selectedDay);
+  const activeDay = effectiveGroups.find((g) => g.dateKey === selectedDay);
 
   return (
     <div className="space-y-8">
@@ -57,7 +145,7 @@ export default function BookingFlow({
           </span>
         </div>
         <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
-          {groupedSlots.map((day) => {
+          {effectiveGroups.map((day) => {
             const isActive = day.dateKey === selectedDay;
             return (
               <button
@@ -124,7 +212,7 @@ export default function BookingFlow({
               })}
             </div>
             <p className="text-xs text-zinc-500 mt-4">
-              Times shown in {friendlyTimezone(timezone)}
+              Times shown in your local timezone ({friendlyTimezone(clientTimezone)})
             </p>
           </>
         ) : (
@@ -175,7 +263,7 @@ export default function BookingFlow({
           name="endUtc"
           value={selectedSlot?.endUtc ?? ""}
         />
-        <input type="hidden" name="timezone" value={timezone} />
+        <input type="hidden" name="timezone" value={clientTimezone} />
 
         <div className="grid md:grid-cols-2 gap-6">
           <Field label="Full name" name="fullName" required placeholder="Jane Doe" />

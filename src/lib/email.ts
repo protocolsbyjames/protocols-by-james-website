@@ -16,6 +16,15 @@ import { AGREEMENT_VERSION } from "@/lib/agreement";
 const JAMES_EMAIL = "protocolsbyjames@gmail.com";
 const FROM_EMAIL = "Protocols by James <protocolsbyjames@gmail.com>";
 
+/**
+ * Gmail aggressively filters messages where `from` and `to` are the same
+ * address — the message routes silently to Sent/hidden instead of Inbox.
+ * Using Gmail plus-addressing (`+bookings`) keeps it in the same inbox but
+ * looks like a different recipient to the delivery filter, so it actually
+ * shows up. When James moves to a pro domain, drop this suffix.
+ */
+const JAMES_NOTIFY_EMAIL = "protocolsbyjames+bookings@gmail.com";
+
 function resend(): Resend {
   const key = process.env.RESEND_API_KEY;
   if (!key) throw new Error("RESEND_API_KEY is not set");
@@ -64,7 +73,7 @@ export async function sendSignedAgreementEmail(
   // ---- Email to James (notification + file-keeping copy) ----
   await client.emails.send({
     from: FROM_EMAIL,
-    to: JAMES_EMAIL,
+    to: JAMES_NOTIFY_EMAIL,
     subject: `Signed agreement: ${params.clientName}`,
     replyTo: params.clientEmail,
     html: coachHtml(params),
@@ -194,8 +203,10 @@ export type PeptalkBookedNotificationParams = {
   clientEmail: string;
   clientPhone: string;
   topic: string;
-  whenDay: string;
-  whenTime: string;
+  /** UTC start of the booking — we re-format in both tz's below. */
+  startUtc: Date;
+  /** IANA tz the client booked from (e.g., "America/Chicago"). */
+  clientTimeZone: string;
   meetLink: string | null;
 };
 
@@ -203,16 +214,29 @@ export async function sendPeptalkBookedNotification(
   p: PeptalkBookedNotificationParams,
 ): Promise<void> {
   const client = resend();
+
+  // Build two parallel displays: client's local time (so James knows what
+  // they saw when they booked) and James's local time (so he doesn't have
+  // to do mental tz math). James's tz is configurable via COACH_TIMEZONE
+  // but defaults to America/Chicago since James is based in Dallas.
+  const coachTz = process.env.COACH_TIMEZONE || "America/Chicago";
+  const clientWhen = formatWhen(p.startUtc, p.clientTimeZone);
+  const coachWhen = formatWhen(p.startUtc, coachTz);
+  const sameTz = p.clientTimeZone === coachTz;
+
+  const subject = `New peptalk booked: ${p.clientName} — ${coachWhen.day} ${coachWhen.time}`;
+
   await client.emails.send({
     from: FROM_EMAIL,
-    to: JAMES_EMAIL,
-    subject: `New peptalk booked: ${p.clientName} — ${p.whenDay} ${p.whenTime}`,
+    to: JAMES_NOTIFY_EMAIL,
+    subject,
     replyTo: p.clientEmail,
     html: `
       <div style="font-family: -apple-system, Segoe UI, sans-serif; color: #111; max-width: 560px;">
         <p><strong>${escapeHtml(p.clientName)}</strong> just booked a peptalk.</p>
         <ul>
-          <li><strong>When:</strong> ${escapeHtml(p.whenDay)} at ${escapeHtml(p.whenTime)}</li>
+          <li><strong>Your time:</strong> ${escapeHtml(coachWhen.day)} at ${escapeHtml(coachWhen.time)}</li>
+          ${sameTz ? "" : `<li><strong>Their time:</strong> ${escapeHtml(clientWhen.day)} at ${escapeHtml(clientWhen.time)} (${escapeHtml(p.clientTimeZone)})</li>`}
           <li><strong>Email:</strong> ${escapeHtml(p.clientEmail)}</li>
           <li><strong>Phone:</strong> ${escapeHtml(p.clientPhone)}</li>
           ${p.meetLink ? `<li><strong>Meet:</strong> <a href="${escapeHtml(p.meetLink)}">${escapeHtml(p.meetLink)}</a></li>` : ""}
@@ -227,6 +251,23 @@ export async function sendPeptalkBookedNotification(
       </div>
     `,
   });
+}
+
+function formatWhen(utc: Date, tz: string): { day: string; time: string } {
+  const day = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    timeZone: tz,
+  }).format(utc);
+  const time = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZoneName: "short",
+    timeZone: tz,
+  }).format(utc);
+  return { day, time };
 }
 
 function firstName(name: string): string {
