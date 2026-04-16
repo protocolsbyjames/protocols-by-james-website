@@ -49,70 +49,25 @@ export default function CalculatorPage() {
       <section className="pb-20 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
-            <h2 className="text-xl font-bold mb-6">Quick Unit Reference</h2>
-
-            <div className="space-y-8">
-              {/* Weight Conversions */}
+            <h2 className="text-xl font-bold mb-4">Quick Unit Reference</h2>
+            <div className="grid sm:grid-cols-3 gap-6">
               <div>
-                <p className="text-amber-400 font-semibold text-sm uppercase tracking-wider mb-3">Weight (mcg to mg)</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {[
-                    ["1,000 mcg", "1 mg"],
-                    ["500 mcg", "0.5 mg"],
-                    ["250 mcg", "0.25 mg"],
-                    ["100 mcg", "0.1 mg"],
-                  ].map(([mcg, mg]) => (
-                    <div key={mcg} className="bg-white/5 rounded-lg p-3 text-center">
-                      <p className="text-white font-bold text-sm">{mcg}</p>
-                      <p className="text-zinc-500 text-xs my-1">=</p>
-                      <p className="text-zinc-300 text-sm">{mg}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Volume Conversions */}
-              <div>
-                <p className="text-amber-400 font-semibold text-sm uppercase tracking-wider mb-3">Volume (mL and cc)</p>
-                <p className="text-zinc-400 text-sm mb-3">
-                  1 mL and 1 cc are the exact same measurement. They are always interchangeable.
+                <p className="text-amber-400 font-bold text-lg mb-1">Volume</p>
+                <p className="text-zinc-400 text-sm">
+                  1 mL and 1 cc are the same measurement. They can be used interchangeably.
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {[
-                    ["1 mL", "1 cc"],
-                    ["0.5 mL", "0.5 cc"],
-                    ["0.3 mL", "0.3 cc"],
-                    ["0.1 mL", "0.1 cc"],
-                  ].map(([ml, cc]) => (
-                    <div key={ml} className="bg-white/5 rounded-lg p-3 text-center">
-                      <p className="text-white font-bold text-sm">{ml}</p>
-                      <p className="text-zinc-500 text-xs my-1">=</p>
-                      <p className="text-zinc-300 text-sm">{cc}</p>
-                    </div>
-                  ))}
-                </div>
               </div>
-
-              {/* Syringe Units */}
               <div>
-                <p className="text-amber-400 font-semibold text-sm uppercase tracking-wider mb-3">Syringe Units (units to mL)</p>
-                <p className="text-zinc-400 text-sm mb-3">
-                  Insulin syringes measure in &ldquo;units.&rdquo; 100 units always equals 1 mL regardless of syringe size.
+                <p className="text-amber-400 font-bold text-lg mb-1">Syringe Units</p>
+                <p className="text-zinc-400 text-sm">
+                  100 units on an insulin syringe is equal to 1 mL (1 cc). 50 units = 0.5 mL, 10 units = 0.1 mL.
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {[
-                    ["100 units", "1 mL"],
-                    ["50 units", "0.5 mL"],
-                    ["30 units", "0.3 mL"],
-                    ["10 units", "0.1 mL"],
-                  ].map(([units, ml]) => (
-                    <div key={units} className="bg-white/5 rounded-lg p-3 text-center">
-                      <p className="text-white font-bold text-sm">{units}</p>
-                      <p className="text-zinc-500 text-xs my-1">=</p>
-                      <p className="text-zinc-300 text-sm">{ml}</p>
-                    </div>
-                  ))}
-                </div>
+              </div>
+              <div>
+                <p className="text-amber-400 font-bold text-lg mb-1">Weight</p>
+                <p className="text-zinc-400 text-sm">
+                  1 mg (milligram) = 1,000 mcg (micrograms). Most peptide doses are measured in mcg.
+                </p>
               </div>
             </div>
           </div>
