@@ -20,14 +20,14 @@ const testimonials: {
     name: "Robert T.",
     result: "Down 75 lbs since December",
     quote:
-      "James built me a plan I could actually stick to. The weekly check-ins kept me honest — 75 pounds gone and I'm still going.",
+      "James built me a plan I could actually stick to. The weekly check-ins kept me honest. 75 pounds gone and I'm still going.",
     image: "/testimonials/robert-transformation.jpg",
   },
   {
     name: "Jose P.",
     result: "Down 40 lbs since November",
     quote:
-      "I'd tried everything before working with James. What's different is the adjustments — my plan evolves every week based on how I'm actually responding.",
+      "I'd tried everything before working with James. What's different is the adjustments. My plan evolves every week based on how I'm actually responding.",
     image: "/testimonials/jose-transformation.jpg",
   },
 ];
@@ -52,7 +52,7 @@ export default function Home() {
             Physique & Self-Optimization
           </p>
           <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
-            Build your best self — <br />
+            Build your best self.<br />
             <span className="gradient-text">physique, confidence, and performance.</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
@@ -84,8 +84,8 @@ export default function Home() {
             Not another cookie-cutter coach.
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto text-lg mb-16">
-            I&apos;ve spent years refining my approach to physique development and self-optimization. 
-            Every protocol is built from real experience, real results, and real science — 
+            I&apos;ve spent years refining my approach to physique development and self-optimization.
+            Every protocol is built from real experience, real results, and real science,
             not recycled templates.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

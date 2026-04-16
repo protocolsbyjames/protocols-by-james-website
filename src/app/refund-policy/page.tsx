@@ -29,8 +29,8 @@ export default function RefundPolicyPage() {
       <p>
         You can cancel your monthly coaching subscription at any time from
         the Settings page inside your account at app.protocolsbyjames.com.
-        Cancellation takes effect at the end of your current billing period —
-        you&apos;ll keep access to the Services through that date, and you will
+        Cancellation takes effect at the end of your current billing period.
+        You&apos;ll keep access to the Services through that date, and you will
         not be charged again.
       </p>
 

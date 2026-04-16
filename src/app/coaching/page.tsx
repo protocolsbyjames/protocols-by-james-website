@@ -405,7 +405,7 @@ export default function CoachingPage() {
           <div className="hidden md:block mt-16 overflow-hidden rounded-2xl border border-zinc-800 bg-[#0d1628] max-w-4xl mx-auto">
             <div className="px-6 py-4 border-b border-zinc-800">
               <h3 className="text-lg font-bold">
-                Performance vs. Elite — side by side
+                Performance vs. Elite: side by side
               </h3>
             </div>
             <table className="w-full text-sm">
