@@ -4,9 +4,9 @@ import { useState, useMemo } from "react";
 import { Calculator, AlertTriangle } from "lucide-react";
 
 const SYRINGE_OPTIONS = [
-  { label: "0.3 mL", value: 0.3, units: 30 },
-  { label: "0.5 mL", value: 0.5, units: 50 },
-  { label: "1.0 mL", value: 1.0, units: 100 },
+  { label: "0.3 mL / 30 units", value: 0.3, units: 30 },
+  { label: "0.5 mL / 50 units", value: 0.5, units: 50 },
+  { label: "1.0 mL / 100 units", value: 1.0, units: 100 },
 ];
 
 const VIAL_OPTIONS = [
