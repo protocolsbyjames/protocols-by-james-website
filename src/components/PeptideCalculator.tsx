@@ -24,9 +24,11 @@ const WATER_OPTIONS = [
 
 const DOSE_OPTIONS = [
   { label: "50 mcg", value: 50 },
-  { label: "100 mcg", value: 100 },
-  { label: "250 mcg", value: 250 },
-  { label: "500 mcg", value: 500 },
+  { label: "100 mcg / 0.1 mg", value: 100 },
+  { label: "250 mcg / 0.25 mg", value: 250 },
+  { label: "500 mcg / 0.5 mg", value: 500 },
+  { label: "1000 mcg / 1 mg", value: 1000 },
+  { label: "2000 mcg / 2 mg", value: 2000 },
 ];
 
 function OptionButton({
@@ -63,6 +65,7 @@ export default function PeptideCalculator() {
   const [showWaterCustom, setShowWaterCustom] = useState(false);
   const [doseMcg, setDoseMcg] = useState<number | null>(null);
   const [doseCustom, setDoseCustom] = useState("");
+  const [doseUnit, setDoseUnit] = useState<"mcg" | "mg">("mcg");
   const [showDoseCustom, setShowDoseCustom] = useState(false);
 
   const effectiveVial = showVialCustom ? parseFloat(vialCustom) || null : vialMg;
@@ -70,7 +73,11 @@ export default function PeptideCalculator() {
     ? parseFloat(waterCustom) || null
     : waterMl;
   const effectiveDose = showDoseCustom
-    ? parseFloat(doseCustom) || null
+    ? (() => {
+        const val = parseFloat(doseCustom);
+        if (!val) return null;
+        return doseUnit === "mg" ? val * 1000 : val;
+      })()
     : doseMcg;
 
   const result = useMemo(() => {
@@ -233,14 +240,38 @@ export default function PeptideCalculator() {
           />
         </div>
         {showDoseCustom && (
-          <div className="mt-3">
+          <div className="mt-3 flex items-center gap-3">
             <input
               type="number"
-              placeholder="Enter dose (mcg)"
+              placeholder={`Enter dose (${doseUnit})`}
               value={doseCustom}
               onChange={(e) => setDoseCustom(e.target.value)}
               className="w-full max-w-xs bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400/50"
             />
+            <div className="flex rounded-lg overflow-hidden border border-white/10">
+              <button
+                type="button"
+                onClick={() => setDoseUnit("mcg")}
+                className={`px-3 py-2.5 text-xs font-semibold transition-colors ${
+                  doseUnit === "mcg"
+                    ? "bg-amber-400 text-[#0b1227]"
+                    : "bg-white/5 text-zinc-400 hover:text-white"
+                }`}
+              >
+                mcg
+              </button>
+              <button
+                type="button"
+                onClick={() => setDoseUnit("mg")}
+                className={`px-3 py-2.5 text-xs font-semibold transition-colors ${
+                  doseUnit === "mg"
+                    ? "bg-amber-400 text-[#0b1227]"
+                    : "bg-white/5 text-zinc-400 hover:text-white"
+                }`}
+              >
+                mg
+              </button>
+            </div>
           </div>
         )}
       </div>
