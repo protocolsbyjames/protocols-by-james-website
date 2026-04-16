@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/coaching", label: "Work With Me" },
   { href: "/peptalk", label: "Free Pep-Talk" },
   { href: "/content", label: "Content" },
+  { href: "/academy", label: "Academy" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
