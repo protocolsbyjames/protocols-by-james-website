@@ -187,7 +187,7 @@ export default function Home() {
                       alt={`${t.name} before and after transformation`}
                       width={800}
                       height={500}
-                      className="w-full h-72 object-cover object-top"
+                      className="w-full h-80 object-cover object-[center_15%]"
                     />
                     <div className="absolute bottom-0 inset-x-0 flex justify-between px-3 pb-2">
                       <span className="bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded">
