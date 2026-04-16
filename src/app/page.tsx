@@ -13,25 +13,22 @@ const testimonials: {
   name: string;
   result: string;
   quote: string;
-  before?: string;
-  after?: string;
+  /** Single composite before/after image (side-by-side in one file). */
+  image?: string;
 }[] = [
   {
     name: "Robert T.",
     result: "Down 75 lbs since December",
     quote:
       "James built me a plan I could actually stick to. The weekly check-ins kept me honest — 75 pounds gone and I'm still going.",
-    // Drop photos into public/testimonials/ and uncomment:
-    // before: "/testimonials/robert-before.jpg",
-    // after: "/testimonials/robert-after.jpg",
+    image: "/testimonials/robert-transformation.jpg",
   },
   {
     name: "Jose P.",
     result: "Down 40 lbs since November",
     quote:
       "I'd tried everything before working with James. What's different is the adjustments — my plan evolves every week based on how I'm actually responding.",
-    // before: "/testimonials/jose-before.jpg",
-    // after: "/testimonials/jose-after.jpg",
+    image: "/testimonials/jose-transformation.jpg",
   },
 ];
 
@@ -183,29 +180,20 @@ export default function Home() {
                 key={t.name}
                 className="bg-white/5 border border-white/10 rounded-xl overflow-hidden card-hover"
               >
-                {t.before && t.after && (
-                  <div className="grid grid-cols-2">
-                    <div className="relative">
-                      <Image
-                        src={t.before}
-                        alt={`${t.name} before`}
-                        width={400}
-                        height={500}
-                        className="w-full h-64 object-cover object-top"
-                      />
-                      <span className="absolute bottom-2 left-2 bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded">
+                {t.image && (
+                  <div className="relative">
+                    <Image
+                      src={t.image}
+                      alt={`${t.name} before and after transformation`}
+                      width={800}
+                      height={500}
+                      className="w-full h-72 object-cover object-top"
+                    />
+                    <div className="absolute bottom-0 inset-x-0 flex justify-between px-3 pb-2">
+                      <span className="bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded">
                         Before
                       </span>
-                    </div>
-                    <div className="relative">
-                      <Image
-                        src={t.after}
-                        alt={`${t.name} after`}
-                        width={400}
-                        height={500}
-                        className="w-full h-64 object-cover object-top"
-                      />
-                      <span className="absolute bottom-2 right-2 bg-amber-400/90 text-black text-xs font-semibold px-2 py-1 rounded">
+                      <span className="bg-amber-400/90 text-black text-xs font-semibold px-2 py-1 rounded">
                         After
                       </span>
                     </div>
