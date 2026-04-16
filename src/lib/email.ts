@@ -4,17 +4,20 @@ import { AGREEMENT_VERSION } from "@/lib/agreement";
 /**
  * Email delivery for transactional PBJ messages.
  *
- * Sender policy (see /sessions/.auto-memory/project_pbj_email_sender.md):
- *   For launch we send everything from `protocolsbyjames@gmail.com`. That
- *   address is Gmail-verified in the Resend dashboard so we can skip the
- *   full DNS/DKIM setup until James upgrades to a custom domain.
+ * Sender policy:
+ *   We send from `hello@protocolsbyjames.com`. The protocolsbyjames.com
+ *   domain is verified in the Resend dashboard (DKIM/SPF set up via
+ *   Vercel DNS). Resend stopped accepting @gmail.com senders on free tier
+ *   in April 2026 with `validation_error: The gmail.com domain is not
+ *   verified` — hence this switch.
  *
- * If you flip to a pro domain later, change `FROM_EMAIL` below and add
- * MX/SPF/DKIM records at the registrar, verify in Resend, and redeploy.
+ *   `JAMES_EMAIL` below is James's actual Gmail inbox and is used only as
+ *   the Reply-To on client-facing emails, so client replies still route
+ *   to his Gmail without needing a mailbox on protocolsbyjames.com.
  */
 
 const JAMES_EMAIL = "protocolsbyjames@gmail.com";
-const FROM_EMAIL = "Protocols by James <protocolsbyjames@gmail.com>";
+const FROM_EMAIL = "Protocols by James <hello@protocolsbyjames.com>";
 
 /**
  * Gmail aggressively filters messages where `from` and `to` are the same
