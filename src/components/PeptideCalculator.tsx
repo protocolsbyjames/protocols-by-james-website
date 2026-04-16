@@ -13,6 +13,9 @@ const VIAL_OPTIONS = [
   { label: "5 mg", value: 5 },
   { label: "10 mg", value: 10 },
   { label: "15 mg", value: 15 },
+  { label: "20 mg", value: 20 },
+  { label: "30 mg", value: 30 },
+  { label: "50 mg", value: 50 },
 ];
 
 const WATER_OPTIONS = [
