@@ -12,10 +12,7 @@ import {
   renderSignedAgreementPdf,
   signedAgreementFilename,
 } from "@/lib/agreement-pdf";
-import {
-  sendSignedAgreementEmail,
-  sendPeptalkBookedNotification,
-} from "@/lib/email";
+import { sendSignedAgreementEmail } from "@/lib/email";
 import { sendCoachSms, formatPeptalkBookedSms } from "@/lib/sms";
 import {
   createBookingEvent,
@@ -254,30 +251,23 @@ async function submitPeptalkBookingInner(formData: FormData) {
       pdf,
       filename,
       signedAt: signedAtIso,
+      // Peptalk context: makes the coach email the single source of
+      // truth for "new booking" — carries time + topic + phone + Meet
+      // link alongside the PDF. Replaces the old, separate booked-
+      // notification email that James asked us to consolidate.
+      peptalk: {
+        clientPhone: input.phone,
+        topic: input.topic,
+        startUtc: start,
+        clientTimeZone: input.timezone,
+        meetLink,
+      },
     });
   } catch (e) {
     console.error("Signed-agreement email failed (non-fatal):", e);
     emailFailed = true;
     // We don't roll back the booking — the call is still booked. James
     // can manually re-send the signed copy from the coach portal.
-  }
-
-  // Short heads-up to James's inbox. Non-fatal: if it fails, the signed
-  // agreement email (above) already carries the booking details. The
-  // email helper formats the time in both the client's tz and James's
-  // coach tz (COACH_TIMEZONE, defaults to America/Chicago).
-  try {
-    await sendPeptalkBookedNotification({
-      clientName: input.fullName,
-      clientEmail: input.email,
-      clientPhone: input.phone,
-      topic: input.topic,
-      startUtc: start,
-      clientTimeZone: input.timezone,
-      meetLink,
-    });
-  } catch (e) {
-    console.error("Peptalk booked notification failed (non-fatal):", e);
   }
 
   // Fire-and-forget SMS to James's phone so he sees bookings in real time

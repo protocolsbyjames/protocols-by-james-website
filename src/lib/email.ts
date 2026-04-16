@@ -48,6 +48,22 @@ export type SignedAgreementEmailParams = {
   filename: string;
   /** ISO timestamp of signing, for email body. */
   signedAt: string;
+  /**
+   * When the signed agreement is for a peptalk booking (not coaching
+   * onboarding), pass this so the coach email becomes the single
+   * notification for the booking — carries time, topic, phone, Meet
+   * link, AND the PDF in one message. This replaces the separate
+   * `sendPeptalkBookedNotification` email we used to send.
+   */
+  peptalk?: {
+    clientPhone: string;
+    topic: string;
+    /** UTC start of the booking. */
+    startUtc: Date;
+    /** IANA tz the client booked from. */
+    clientTimeZone: string;
+    meetLink: string | null;
+  };
 };
 
 /**
@@ -92,10 +108,16 @@ export async function sendSignedAgreementEmail(
   });
 
   // ---- Email to James (notification + file-keeping copy) ----
+  // For peptalk bookings this email IS the booking notification — no
+  // separate heads-up email. Subject and body adapt based on whether
+  // peptalk context was supplied.
+  const coachSubject = params.peptalk
+    ? coachPeptalkSubject(params)
+    : `Signed agreement: ${params.clientName}`;
   const coachRes = await client.emails.send({
     from: FROM_EMAIL,
     to: JAMES_NOTIFY_EMAIL,
-    subject: `Signed agreement: ${params.clientName}`,
+    subject: coachSubject,
     replyTo: params.clientEmail,
     html: coachHtml(params),
     attachments: [attachment],
@@ -129,6 +151,36 @@ function clientHtml(p: SignedAgreementEmailParams): string {
 }
 
 function coachHtml(p: SignedAgreementEmailParams): string {
+  // Peptalk flavor: this email carries booking + signed-agreement info
+  // in one, so James doesn't get a separate "new booking" email.
+  if (p.peptalk) {
+    const coachTz = process.env.COACH_TIMEZONE || "America/Chicago";
+    const coachWhen = formatWhen(p.peptalk.startUtc, coachTz);
+    const clientWhen = formatWhen(p.peptalk.startUtc, p.peptalk.clientTimeZone);
+    const sameTz = p.peptalk.clientTimeZone === coachTz;
+
+    return `
+      <div style="font-family: -apple-system, Segoe UI, sans-serif; color: #111; max-width: 560px;">
+        <p><strong>${escapeHtml(p.clientName)}</strong> just booked a Pep-Talk and signed the agreement.</p>
+        <ul>
+          <li><strong>Your time:</strong> ${escapeHtml(coachWhen.day)} at ${escapeHtml(coachWhen.time)}</li>
+          ${sameTz ? "" : `<li><strong>Their time:</strong> ${escapeHtml(clientWhen.day)} at ${escapeHtml(clientWhen.time)} (${escapeHtml(p.peptalk.clientTimeZone)})</li>`}
+          <li><strong>Email:</strong> ${escapeHtml(p.clientEmail)}</li>
+          <li><strong>Phone:</strong> ${escapeHtml(p.peptalk.clientPhone)}</li>
+          ${p.peptalk.meetLink ? `<li><strong>Meet:</strong> <a href="${escapeHtml(p.peptalk.meetLink)}">${escapeHtml(p.peptalk.meetLink)}</a></li>` : ""}
+        </ul>
+        <p><strong>Topic:</strong></p>
+        <blockquote style="border-left: 3px solid #f59e0b; padding-left: 12px; color: #333;">
+          ${escapeHtml(p.peptalk.topic).replace(/\n/g, "<br />")}
+        </blockquote>
+        <p style="font-size: 12px; color: #666;">
+          Signed copy attached · Agreement version ${AGREEMENT_VERSION} · Signed at ${escapeHtml(p.signedAt)}
+        </p>
+      </div>
+    `;
+  }
+
+  // Default (coaching onboarding) flavor.
   return `
     <div style="font-family: -apple-system, Segoe UI, sans-serif; color: #111; max-width: 560px;">
       <p><strong>${escapeHtml(p.clientName)}</strong> just signed the coaching agreement.</p>
@@ -140,6 +192,13 @@ function coachHtml(p: SignedAgreementEmailParams): string {
       <p>Signed copy attached. Intake questionnaire comes next — you'll see it in the coach portal when they submit.</p>
     </div>
   `;
+}
+
+function coachPeptalkSubject(p: SignedAgreementEmailParams): string {
+  if (!p.peptalk) return `Signed agreement: ${p.clientName}`;
+  const coachTz = process.env.COACH_TIMEZONE || "America/Chicago";
+  const when = formatWhen(p.peptalk.startUtc, coachTz);
+  return `New Pep-Talk: ${p.clientName} — ${when.day} ${when.time}`;
 }
 
 /**
@@ -230,71 +289,11 @@ function reminderHtml(p: PeptalkReminderEmailParams): string {
   `;
 }
 
-/**
- * Notifies James whenever a new peptalk is booked. The signed-agreement
- * email already hits his inbox as a paper trail, but this is a shorter
- * heads-up with topic + booker context so he can scan it quickly.
- */
-export type PeptalkBookedNotificationParams = {
-  clientName: string;
-  clientEmail: string;
-  clientPhone: string;
-  topic: string;
-  /** UTC start of the booking — we re-format in both tz's below. */
-  startUtc: Date;
-  /** IANA tz the client booked from (e.g., "America/Chicago"). */
-  clientTimeZone: string;
-  meetLink: string | null;
-};
-
-export async function sendPeptalkBookedNotification(
-  p: PeptalkBookedNotificationParams,
-): Promise<void> {
-  const client = resend();
-
-  // Build two parallel displays: client's local time (so James knows what
-  // they saw when they booked) and James's local time (so he doesn't have
-  // to do mental tz math). James's tz is configurable via COACH_TIMEZONE
-  // but defaults to America/Chicago since James is based in Dallas.
-  const coachTz = process.env.COACH_TIMEZONE || "America/Chicago";
-  const clientWhen = formatWhen(p.startUtc, p.clientTimeZone);
-  const coachWhen = formatWhen(p.startUtc, coachTz);
-  const sameTz = p.clientTimeZone === coachTz;
-
-  const subject = `New Pep-Talk booked: ${p.clientName} — ${coachWhen.day} ${coachWhen.time}`;
-
-  const res = await client.emails.send({
-    from: FROM_EMAIL,
-    to: JAMES_NOTIFY_EMAIL,
-    subject,
-    replyTo: p.clientEmail,
-    html: `
-      <div style="font-family: -apple-system, Segoe UI, sans-serif; color: #111; max-width: 560px;">
-        <p><strong>${escapeHtml(p.clientName)}</strong> just booked a Pep-Talk.</p>
-        <ul>
-          <li><strong>Your time:</strong> ${escapeHtml(coachWhen.day)} at ${escapeHtml(coachWhen.time)}</li>
-          ${sameTz ? "" : `<li><strong>Their time:</strong> ${escapeHtml(clientWhen.day)} at ${escapeHtml(clientWhen.time)} (${escapeHtml(p.clientTimeZone)})</li>`}
-          <li><strong>Email:</strong> ${escapeHtml(p.clientEmail)}</li>
-          <li><strong>Phone:</strong> ${escapeHtml(p.clientPhone)}</li>
-          ${p.meetLink ? `<li><strong>Meet:</strong> <a href="${escapeHtml(p.meetLink)}">${escapeHtml(p.meetLink)}</a></li>` : ""}
-        </ul>
-        <p><strong>Topic:</strong></p>
-        <blockquote style="border-left: 3px solid #f59e0b; padding-left: 12px; color: #333;">
-          ${escapeHtml(p.topic).replace(/\n/g, "<br />")}
-        </blockquote>
-        <p style="font-size: 12px; color: #666;">
-          The signed agreement PDF is in the companion email.
-        </p>
-      </div>
-    `,
-  });
-  if (res.error) {
-    console.error("[resend] peptalk-booked-notification failed", res.error);
-    throw new Error(
-      `Resend rejected booked notification: ${res.error.name} - ${res.error.message}`,
-    );
-  }
-}
+// NOTE: `sendPeptalkBookedNotification` + `PeptalkBookedNotificationParams`
+// were removed 2026-04-15. James asked to consolidate — the coach copy of
+// the signed-agreement email now carries the booking details (time, topic,
+// phone, Meet link) AND the PDF, so the separate heads-up email was just
+// inbox noise. See `coachHtml`'s peptalk branch above.
 
 function formatWhen(utc: Date, tz: string): { day: string; time: string } {
   const day = new Intl.DateTimeFormat("en-US", {
