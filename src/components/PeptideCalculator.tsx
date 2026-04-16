@@ -46,7 +46,7 @@ function OptionButton({
   );
 }
 
-/* ── SVG Syringe ── */
+/* ── Horizontal Insulin Syringe SVG ── */
 function SyringeVisual({
   fillPercent,
   units,
@@ -56,93 +56,143 @@ function SyringeVisual({
   units: number;
   maxUnits: number;
 }) {
-  const bodyTop = 40;
-  const bodyBottom = 260;
-  const bodyHeight = bodyBottom - bodyTop;
-  const bodyLeft = 55;
-  const bodyRight = 105;
-  const bodyWidth = bodyRight - bodyLeft;
-  const centerX = (bodyLeft + bodyRight) / 2;
+  // Horizontal layout: needle on left, plunger on right
+  const barrelLeft = 70;
+  const barrelRight = 480;
+  const barrelWidth = barrelRight - barrelLeft;
+  const barrelTop = 28;
+  const barrelBottom = 62;
+  const barrelHeight = barrelBottom - barrelTop;
+  const centerY = (barrelTop + barrelBottom) / 2;
 
   const clampedPercent = Math.min(Math.max(fillPercent, 0), 100);
-  const fillHeight = (clampedPercent / 100) * bodyHeight;
-  const fillTop = bodyBottom - fillHeight;
+  const fillWidth = (clampedPercent / 100) * barrelWidth;
 
+  // Tick marks along the top
   const tickCount = maxUnits / 10;
   const ticks = [];
   for (let i = 0; i <= tickCount; i++) {
     const unitVal = i * 10;
-    const y = bodyBottom - (i / tickCount) * bodyHeight;
+    const x = barrelLeft + (i / tickCount) * barrelWidth;
     const isMajor = unitVal % (maxUnits <= 30 ? 10 : 20) === 0;
-    ticks.push({ y, unitVal, isMajor });
+    ticks.push({ x, unitVal, isMajor });
   }
 
-  const fillLineY = fillTop;
+  // Fill line x position
+  const fillLineX = barrelLeft + fillWidth;
 
   return (
     <svg
-      viewBox="0 0 160 310"
-      className="w-full max-w-[160px] h-auto"
+      viewBox="0 0 560 100"
+      className="w-full h-auto"
       role="img"
       aria-label={`Syringe filled to ${units} units`}
     >
-      {/* Plunger rod */}
-      <rect x={centerX - 3} y={2} width={6} height={bodyTop - 2} rx={2} fill="#555" />
-      {/* Plunger handle */}
-      <rect x={centerX - 18} y={0} width={36} height={8} rx={3} fill="#777" />
+      {/* ── Needle ── */}
+      <line
+        x1={2}
+        y1={centerY}
+        x2={30}
+        y2={centerY}
+        stroke="#999"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+      />
+      {/* Needle hub (cone shape) */}
+      <polygon
+        points={`30,${centerY - 3} 42,${centerY - 8} 42,${centerY + 8} 30,${centerY + 3}`}
+        fill="#777"
+      />
+      {/* Hub-to-barrel connector */}
+      <rect x={42} y={centerY - 9} width={barrelLeft - 42} height={18} rx={2} fill="#666" />
 
-      {/* Barrel outer */}
+      {/* ── Barrel ── */}
+      {/* Barrel body with rounded ends */}
       <rect
-        x={bodyLeft - 2}
-        y={bodyTop - 2}
-        width={bodyWidth + 4}
-        height={bodyHeight + 4}
-        rx={4}
-        fill="none"
+        x={barrelLeft}
+        y={barrelTop}
+        width={barrelWidth}
+        height={barrelHeight}
+        rx={5}
+        fill="rgba(255,255,255,0.04)"
         stroke="#555"
         strokeWidth={1.5}
       />
-      {/* Barrel inner */}
-      <rect
-        x={bodyLeft}
-        y={bodyTop}
-        width={bodyWidth}
-        height={bodyHeight}
-        rx={3}
-        fill="rgba(255,255,255,0.03)"
-      />
 
-      {/* Fill liquid */}
+      {/* Finger flanges */}
+      <rect x={barrelRight} y={barrelTop - 8} width={4} height={barrelHeight + 16} rx={2} fill="#666" />
+
+      {/* ── Fill liquid (from left) ── */}
       {clampedPercent > 0 && (
         <rect
-          x={bodyLeft + 1}
-          y={fillTop}
-          width={bodyWidth - 2}
-          height={fillHeight}
-          rx={2}
-          fill="url(#liquidGradient)"
+          x={barrelLeft + 1}
+          y={barrelTop + 1.5}
+          width={Math.min(fillWidth, barrelWidth - 2)}
+          height={barrelHeight - 3}
+          rx={4}
+          fill="url(#hLiquidGradient)"
           className="transition-all duration-500 ease-out"
         />
       )}
 
-      {/* Tick marks + labels */}
-      {ticks.map(({ y, unitVal, isMajor }) => (
+      {/* ── Plunger ── */}
+      {/* Plunger gasket (inside barrel, at fill line or at right end when empty) */}
+      {clampedPercent > 0 ? (
+        <rect
+          x={fillLineX - 2}
+          y={barrelTop + 1}
+          width={4}
+          height={barrelHeight - 2}
+          rx={1}
+          fill="#888"
+        />
+      ) : (
+        <rect
+          x={barrelRight - 4}
+          y={barrelTop + 1}
+          width={4}
+          height={barrelHeight - 2}
+          rx={1}
+          fill="#888"
+        />
+      )}
+      {/* Plunger rod */}
+      <rect
+        x={barrelRight + 4}
+        y={centerY - 2.5}
+        width={50}
+        height={5}
+        rx={2}
+        fill="#666"
+      />
+      {/* Plunger thumb pad */}
+      <rect
+        x={barrelRight + 52}
+        y={centerY - 10}
+        width={6}
+        height={20}
+        rx={3}
+        fill="#777"
+      />
+
+      {/* ── Tick marks along bottom ── */}
+      {ticks.map(({ x, unitVal, isMajor }) => (
         <g key={unitVal}>
           <line
-            x1={bodyLeft - (isMajor ? 10 : 5)}
-            y1={y}
-            x2={bodyLeft}
-            y2={y}
+            x1={x}
+            y1={barrelBottom}
+            x2={x}
+            y2={barrelBottom + (isMajor ? 10 : 5)}
             stroke={isMajor ? "#888" : "#555"}
             strokeWidth={isMajor ? 1.2 : 0.8}
           />
           {isMajor && (
             <text
-              x={bodyLeft - 14}
-              y={y + 3.5}
-              textAnchor="end"
+              x={x}
+              y={barrelBottom + 20}
+              textAnchor="middle"
               fill="#999"
-              fontSize={9}
+              fontSize={8}
               fontFamily="monospace"
             >
               {unitVal}
@@ -151,26 +201,27 @@ function SyringeVisual({
         </g>
       ))}
 
-      {/* Fill line indicator arrow */}
+      {/* ── Fill indicator arrow (points down from top) ── */}
       {clampedPercent > 0 && clampedPercent <= 100 && (
         <g>
           <line
-            x1={bodyRight + 4}
-            y1={fillLineY}
-            x2={bodyRight + 20}
-            y2={fillLineY}
+            x1={fillLineX}
+            y1={barrelTop - 14}
+            x2={fillLineX}
+            y2={barrelTop - 4}
             stroke="#fbbf24"
             strokeWidth={1.5}
           />
           <polygon
-            points={`${bodyRight + 4},${fillLineY} ${bodyRight + 10},${fillLineY - 3} ${bodyRight + 10},${fillLineY + 3}`}
+            points={`${fillLineX},${barrelTop - 2} ${fillLineX - 4},${barrelTop - 8} ${fillLineX + 4},${barrelTop - 8}`}
             fill="#fbbf24"
           />
           <text
-            x={bodyRight + 24}
-            y={fillLineY + 4}
+            x={fillLineX}
+            y={barrelTop - 18}
+            textAnchor="middle"
             fill="#fbbf24"
-            fontSize={11}
+            fontSize={10}
             fontWeight="bold"
             fontFamily="monospace"
           >
@@ -179,28 +230,9 @@ function SyringeVisual({
         </g>
       )}
 
-      {/* Needle hub */}
-      <rect
-        x={centerX - 8}
-        y={bodyBottom + 2}
-        width={16}
-        height={14}
-        rx={2}
-        fill="#666"
-      />
-      {/* Needle */}
-      <line
-        x1={centerX}
-        y1={bodyBottom + 16}
-        x2={centerX}
-        y2={bodyBottom + 46}
-        stroke="#999"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-      />
-
+      {/* Gradients */}
       <defs>
-        <linearGradient id="liquidGradient" x1="0" y1="0" x2="1" y2="0">
+        <linearGradient id="hLiquidGradient" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="rgba(251, 191, 36, 0.35)" />
           <stop offset="50%" stopColor="rgba(251, 191, 36, 0.5)" />
           <stop offset="100%" stopColor="rgba(251, 191, 36, 0.35)" />
@@ -231,7 +263,6 @@ export default function PeptideCalculator() {
     ? parseFloat(waterCustom) || null
     : waterMl;
 
-  // Dose: mcg and mg stay in sync
   const effectiveDoseMcg = useMemo(() => {
     if (lastDoseSource === "mg") {
       const mg = parseFloat(doseMgInput);
@@ -440,7 +471,7 @@ export default function PeptideCalculator() {
         </div>
       </div>
 
-      {/* Result with Syringe Visual */}
+      {/* Result with horizontal syringe underneath */}
       <div className="mt-10">
         {result ? (
           <div
@@ -467,35 +498,32 @@ export default function PeptideCalculator() {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col md:flex-row items-center gap-8">
-                {/* Syringe graphic */}
-                <div className="flex-shrink-0">
-                  <SyringeVisual
-                    fillPercent={result.fillPercent}
-                    units={result.syringeUnits}
-                    maxUnits={result.syringeMax}
-                  />
-                </div>
-
+              <div>
                 {/* Text result */}
-                <div className="text-center md:text-left">
+                <div className="text-center mb-6">
                   <p className="text-zinc-400 text-sm mb-2">
                     To have a dose of{" "}
                     <span className="text-white font-semibold">
-                      {effectiveDoseMcg} mcg ({(effectiveDoseMcg! / 1000).toFixed(
-                        2
-                      )}{" "}
-                      mg)
+                      {effectiveDoseMcg} mcg ({(effectiveDoseMcg! / 1000).toFixed(2)} mg)
                     </span>
                     , pull the syringe to:
                   </p>
-                  <p className="text-amber-400 text-5xl font-bold mb-2">
+                  <p className="text-amber-400 text-5xl font-bold mb-1">
                     {result.syringeUnits} units
                   </p>
                   <p className="text-zinc-500 text-sm">
                     {result.doseMl} mL &middot; Concentration:{" "}
                     {result.concentrationMgPerMl} mg/mL
                   </p>
+                </div>
+
+                {/* Horizontal syringe underneath */}
+                <div className="mt-4">
+                  <SyringeVisual
+                    fillPercent={result.fillPercent}
+                    units={result.syringeUnits}
+                    maxUnits={result.syringeMax}
+                  />
                 </div>
               </div>
             )}
