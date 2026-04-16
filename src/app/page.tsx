@@ -165,11 +165,74 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* My Transformation */}
       <section className="py-24 px-6 bg-white/[0.02]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.2em] text-gray-500 mb-4">Results</p>
+            <p className="text-sm uppercase tracking-[0.2em] text-gray-500 mb-4">My Story</p>
+            <h2 className="text-3xl md:text-5xl font-bold">
+              I built this from experience, not a textbook.
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            {/* Photos */}
+            <div className="space-y-4">
+              <div className="relative rounded-xl overflow-hidden">
+                <Image
+                  src="/testimonials/james-transformation.JPG"
+                  alt="James Quilter before and after transformation"
+                  width={900}
+                  height={600}
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute bottom-0 inset-x-0 flex justify-between px-3 pb-2">
+                  <span className="bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded">
+                    Before
+                  </span>
+                  <span className="bg-amber-400/90 text-black text-xs font-semibold px-2 py-1 rounded">
+                    After
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Story */}
+            <div>
+              <h3 className="text-2xl font-bold mb-6">
+                From 230+ lbs to the best shape of my life.
+              </h3>
+              <div className="space-y-4 text-gray-400 leading-relaxed">
+                <p>
+                  At 230+ I felt like complete crap. I wasn&apos;t happy with what I was waking up to in the mirror. I was training hard but eating whatever, following random programs off the internet, and wondering why nothing was changing.
+                </p>
+                <p>
+                  What changed everything was learning how to build actual systems. Not just a workout plan or a meal plan, but a complete approach to training, nutrition, recovery, and protocols that all work together. Once I dialed in the process, the results came fast.
+                </p>
+                <p>
+                  That transformation is the foundation of everything I coach today. Every protocol I give my clients comes from years of personal trial and error, real results, and constant refinement. I don&apos;t hand out cookie-cutter plans because I know firsthand that they don&apos;t work.
+                </p>
+                <p className="text-white font-medium">
+                  If I could figure this out starting from where I was, I can help you get there too.
+                </p>
+              </div>
+              <div className="mt-8">
+                <Link
+                  href="/peptalk/book"
+                  className="bg-amber-400 text-black px-6 py-3 rounded-md font-semibold hover:bg-amber-500 transition-colors inline-flex items-center gap-2"
+                >
+                  Book a Free Pep-Talk <ArrowRight size={18} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-24 px-6 border-t border-white/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-sm uppercase tracking-[0.2em] text-gray-500 mb-4">Client Results</p>
             <h2 className="text-3xl md:text-5xl font-bold">
               Real people. Real results.
             </h2>

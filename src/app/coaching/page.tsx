@@ -10,6 +10,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const steps = [
   {
@@ -196,6 +197,59 @@ export default function CoachingPage() {
             full 1:1 coaching — every plan is built around you and your
             goals. No cookie-cutter.
           </p>
+        </div>
+      </section>
+
+      {/* Meet Your Coach */}
+      <section className="py-20 px-6 bg-[#0d1628]">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="rounded-2xl overflow-hidden">
+              <Image
+                src="/testimonials/PBJ.jpeg"
+                alt="James Quilter"
+                width={600}
+                height={800}
+                className="w-full h-[500px] object-cover object-top"
+              />
+            </div>
+            <div>
+              <span className="text-amber-400 font-semibold tracking-widest uppercase text-sm">
+                Meet Your Coach
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold mt-4 mb-6">
+                I&apos;ve been where you are.
+              </h2>
+              <div className="space-y-4 text-zinc-400 leading-relaxed">
+                <p>
+                  At 230+ I felt like complete crap. I wasn&apos;t happy with
+                  what I was waking up to in the mirror. Training hard but
+                  eating whatever, following random programs, and getting
+                  nowhere.
+                </p>
+                <p>
+                  What changed everything was building real systems. Not just
+                  a workout plan, but a complete approach to training,
+                  nutrition, recovery, and protocols that all work together.
+                  Once I dialed it in, the results came fast.
+                </p>
+                <p>
+                  Now I take everything I learned through that process and
+                  build it for my clients. Every protocol comes from real
+                  experience and constant refinement. That&apos;s why this
+                  works.
+                </p>
+              </div>
+              <div className="mt-8">
+                <Link
+                  href="/peptalk/book"
+                  className="inline-flex items-center gap-2 bg-amber-400 text-black px-6 py-3 rounded-md font-semibold hover:bg-amber-500 transition-colors"
+                >
+                  Book a Free Pep-Talk <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
