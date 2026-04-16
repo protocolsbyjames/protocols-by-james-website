@@ -66,7 +66,10 @@ export async function sendSignedAgreementEmail(
   };
 
   // ---- Email to the signer (confirmation + their copy) ----
-  await client.emails.send({
+  // NOTE: Resend's SDK returns { data, error } and does NOT throw on API
+  // errors. We must inspect `error` ourselves and throw — otherwise
+  // rejected sends get swallowed and the caller thinks everything was fine.
+  const signerRes = await client.emails.send({
     from: FROM_EMAIL,
     to: params.clientEmail,
     subject: "Your signed Protocols by James coaching agreement",
@@ -74,15 +77,35 @@ export async function sendSignedAgreementEmail(
     html: clientHtml(params),
     attachments: [attachment],
   });
+  if (signerRes.error) {
+    console.error("[resend] signed-agreement -> signer failed", signerRes.error);
+    throw new Error(
+      `Resend rejected signer email: ${signerRes.error.name} - ${signerRes.error.message}`,
+    );
+  }
+  console.log("[resend] signed-agreement -> signer sent", {
+    id: signerRes.data?.id,
+    to: params.clientEmail,
+  });
 
   // ---- Email to James (notification + file-keeping copy) ----
-  await client.emails.send({
+  const coachRes = await client.emails.send({
     from: FROM_EMAIL,
     to: JAMES_NOTIFY_EMAIL,
     subject: `Signed agreement: ${params.clientName}`,
     replyTo: params.clientEmail,
     html: coachHtml(params),
     attachments: [attachment],
+  });
+  if (coachRes.error) {
+    console.error("[resend] signed-agreement -> coach failed", coachRes.error);
+    throw new Error(
+      `Resend rejected coach email: ${coachRes.error.name} - ${coachRes.error.message}`,
+    );
+  }
+  console.log("[resend] signed-agreement -> coach sent", {
+    id: coachRes.data?.id,
+    to: JAMES_NOTIFY_EMAIL,
   });
 }
 
@@ -148,13 +171,19 @@ export async function sendPeptalkReminderEmail(
       ? `Your Pep-Talk with James is tomorrow — ${params.whenTime}`
       : `Your Pep-Talk with James starts in 1 hour`;
 
-  await client.emails.send({
+  const res = await client.emails.send({
     from: FROM_EMAIL,
     to: params.clientEmail,
     subject,
     replyTo: JAMES_EMAIL,
     html: reminderHtml(params),
   });
+  if (res.error) {
+    console.error("[resend] peptalk-reminder failed", res.error);
+    throw new Error(
+      `Resend rejected reminder email: ${res.error.name} - ${res.error.message}`,
+    );
+  }
 }
 
 function reminderHtml(p: PeptalkReminderEmailParams): string {
@@ -231,7 +260,7 @@ export async function sendPeptalkBookedNotification(
 
   const subject = `New Pep-Talk booked: ${p.clientName} — ${coachWhen.day} ${coachWhen.time}`;
 
-  await client.emails.send({
+  const res = await client.emails.send({
     from: FROM_EMAIL,
     to: JAMES_NOTIFY_EMAIL,
     subject,
@@ -256,6 +285,12 @@ export async function sendPeptalkBookedNotification(
       </div>
     `,
   });
+  if (res.error) {
+    console.error("[resend] peptalk-booked-notification failed", res.error);
+    throw new Error(
+      `Resend rejected booked notification: ${res.error.name} - ${res.error.message}`,
+    );
+  }
 }
 
 function formatWhen(utc: Date, tz: string): { day: string; time: string } {
