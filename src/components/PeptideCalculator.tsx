@@ -56,7 +56,6 @@ function SyringeVisual({
   units: number;
   maxUnits: number;
 }) {
-  // Syringe dimensions
   const bodyTop = 40;
   const bodyBottom = 260;
   const bodyHeight = bodyBottom - bodyTop;
@@ -65,12 +64,10 @@ function SyringeVisual({
   const bodyWidth = bodyRight - bodyLeft;
   const centerX = (bodyLeft + bodyRight) / 2;
 
-  // Fill from bottom up
   const clampedPercent = Math.min(Math.max(fillPercent, 0), 100);
   const fillHeight = (clampedPercent / 100) * bodyHeight;
   const fillTop = bodyBottom - fillHeight;
 
-  // Tick marks
   const tickCount = maxUnits / 10;
   const ticks = [];
   for (let i = 0; i <= tickCount; i++) {
@@ -80,7 +77,6 @@ function SyringeVisual({
     ticks.push({ y, unitVal, isMajor });
   }
 
-  // Where the fill line sits (for the indicator arrow)
   const fillLineY = fillTop;
 
   return (
@@ -106,7 +102,7 @@ function SyringeVisual({
         stroke="#555"
         strokeWidth={1.5}
       />
-      {/* Barrel inner (glass look) */}
+      {/* Barrel inner */}
       <rect
         x={bodyLeft}
         y={bodyTop}
@@ -155,7 +151,7 @@ function SyringeVisual({
         </g>
       ))}
 
-      {/* Fill line indicator */}
+      {/* Fill line indicator arrow */}
       {clampedPercent > 0 && clampedPercent <= 100 && (
         <g>
           <line
@@ -203,7 +199,6 @@ function SyringeVisual({
         strokeLinecap="round"
       />
 
-      {/* Gradient definition */}
       <defs>
         <linearGradient id="liquidGradient" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="rgba(251, 191, 36, 0.35)" />
@@ -440,12 +435,12 @@ export default function PeptideCalculator() {
             className={`${inputClass} max-w-xs`}
           />
           <p className="text-zinc-500 text-xs mt-2">
-            1 mg = 1000 mcg. Editing either field updates the other.
+            1 mg = 1,000 mcg. Editing either field updates the other.
           </p>
         </div>
       </div>
 
-      {/* Result */}
+      {/* Result with Syringe Visual */}
       <div className="mt-10">
         {result ? (
           <div
