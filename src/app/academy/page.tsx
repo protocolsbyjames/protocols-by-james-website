@@ -134,12 +134,41 @@ export default function AcademyPage() {
             </button>
           </form>
 
-          <p className="text-center text-xs text-zinc-500 mt-8">
-            Don't have an access code?{" "}
-            <a href="/contact" className="text-amber-400 hover:underline">
-              Contact us
-            </a>
-          </p>
+          <div className="mt-12 rounded-2xl border border-zinc-800 bg-[#0d1628] p-8 text-center">
+            <h3 className="text-xl font-bold mb-3">
+              Don&apos;t have an access code?
+            </h3>
+            <p className="text-zinc-400 text-sm mb-6">
+              DM me on any of my social media pages and I&apos;ll send you a
+              free access code to Peptide Academy.
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <a
+                href="https://instagram.com/protocolsbyjames"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-white/10 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-white/20 transition-colors text-sm"
+              >
+                Instagram
+              </a>
+              <a
+                href="https://tiktok.com/@protocolsbyjames"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-white/10 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-white/20 transition-colors text-sm"
+              >
+                TikTok
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61573290748342"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-white/10 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-white/20 transition-colors text-sm"
+              >
+                Facebook
+              </a>
+            </div>
+          </div>
         </div>
       </section>
     </main>
