@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Dumbbell, Flame, Brain, TrendingUp, CheckCircle } from "lucide-react";
 
 const services = [
@@ -8,18 +9,29 @@ const services = [
   { icon: TrendingUp, title: "Performance", desc: "Enhance energy, focus, and physical output across every area of life." },
 ];
 
-const testimonials = [
+const testimonials: {
+  name: string;
+  result: string;
+  quote: string;
+  before?: string;
+  after?: string;
+}[] = [
   {
     name: "Robert T.",
     result: "Down 75 lbs since December",
     quote:
       "James built me a plan I could actually stick to. The weekly check-ins kept me honest — 75 pounds gone and I'm still going.",
+    // Drop photos into public/testimonials/ and uncomment:
+    // before: "/testimonials/robert-before.jpg",
+    // after: "/testimonials/robert-after.jpg",
   },
   {
     name: "Jose P.",
     result: "Down 40 lbs since November",
     quote:
       "I'd tried everything before working with James. What's different is the adjustments — my plan evolves every week based on how I'm actually responding.",
+    // before: "/testimonials/jose-before.jpg",
+    // after: "/testimonials/jose-after.jpg",
   },
 ];
 
@@ -165,15 +177,45 @@ export default function Home() {
               Real people. Real results.
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {testimonials.map((t) => (
               <div
                 key={t.name}
-                className="bg-white/5 border border-white/10 rounded-xl p-8 card-hover"
+                className="bg-white/5 border border-white/10 rounded-xl overflow-hidden card-hover"
               >
-                <div className="text-sm font-semibold text-green-400 mb-2">{t.result}</div>
-                <p className="text-gray-300 mb-6 italic">&ldquo;{t.quote}&rdquo;</p>
-                <p className="text-sm text-gray-500 font-medium">{t.name}</p>
+                {t.before && t.after && (
+                  <div className="grid grid-cols-2">
+                    <div className="relative">
+                      <Image
+                        src={t.before}
+                        alt={`${t.name} before`}
+                        width={400}
+                        height={500}
+                        className="w-full h-64 object-cover object-top"
+                      />
+                      <span className="absolute bottom-2 left-2 bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded">
+                        Before
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <Image
+                        src={t.after}
+                        alt={`${t.name} after`}
+                        width={400}
+                        height={500}
+                        className="w-full h-64 object-cover object-top"
+                      />
+                      <span className="absolute bottom-2 right-2 bg-amber-400/90 text-black text-xs font-semibold px-2 py-1 rounded">
+                        After
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <div className="p-8">
+                  <div className="text-sm font-semibold text-green-400 mb-2">{t.result}</div>
+                  <p className="text-gray-300 mb-6 italic">&ldquo;{t.quote}&rdquo;</p>
+                  <p className="text-sm text-gray-500 font-medium">{t.name}</p>
+                </div>
               </div>
             ))}
           </div>
