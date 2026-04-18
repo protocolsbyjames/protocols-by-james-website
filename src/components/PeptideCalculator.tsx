@@ -42,7 +42,7 @@ function SyringeIllustration({ syringeValue }: { syringeValue: number }) {
         <rect x={10} y={16} width={140} height={7} rx={4} fill="rgba(255,255,255,0.15)" />
         {/* Dose window */}
         <rect x={95} y={19} width={22} height={12} rx={2} fill="#1a1a2e" stroke="#666" strokeWidth={0.5} />
-        <text x={106} y={29} textAnchor="middle" fill="#fbbf24" fontSize={7} fontFamily="monospace" fontWeight="bold">300</text>
+        <text x={106} y={29} textAnchor="middle" fill="#fbbf24" fontSize={7} fontFamily="monospace" fontWeight="bold">0</text>
         {/* Dial knob */}
         <rect x={150} y={18} width={24} height={14} rx={3} fill="#6b6b6b" />
         <line x1={155} y1={21} x2={155} y2={29} stroke="#555" strokeWidth={0.6} />
