@@ -9,30 +9,96 @@ const SYRINGE_OPTIONS = [
     value: 0.3,
     units: 30,
     description: "BD Insulin Syringe — smallest, most precise for low-volume doses",
-    image: "/images/syringes/bd-03ml.png",
   },
   {
     label: "0.5 mL / 50 units",
     value: 0.5,
     units: 50,
     description: "BD Insulin Syringe — most common for peptide dosing",
-    image: "/images/syringes/bd-05ml.png",
   },
   {
     label: "1.0 mL / 100 units",
     value: 1.0,
     units: 100,
     description: "BD Insulin Syringe — for higher volume draws",
-    image: "/images/syringes/bd-10ml.png",
   },
   {
     label: "Peptide Pen / 300 units",
     value: 3.0,
     units: 300,
     description: "Pre-filled peptide pen — dial your dose, no syringe needed",
-    image: "/images/syringes/peptide-pen.png",
   },
 ];
+
+/* ── Inline SVG Illustrations for Syringe Selector ── */
+function SyringeIllustration({ syringeValue }: { syringeValue: number }) {
+  if (syringeValue === 3.0) {
+    // Peptide Pen — horizontal
+    return (
+      <svg viewBox="0 0 200 50" className="w-full h-auto">
+        {/* Pen body */}
+        <rect x={10} y={16} width={140} height={18} rx={9} fill="#8a8a8a" />
+        {/* Metallic sheen */}
+        <rect x={10} y={16} width={140} height={7} rx={4} fill="rgba(255,255,255,0.15)" />
+        {/* Dose window */}
+        <rect x={95} y={19} width={22} height={12} rx={2} fill="#1a1a2e" stroke="#666" strokeWidth={0.5} />
+        <text x={106} y={29} textAnchor="middle" fill="#fbbf24" fontSize={7} fontFamily="monospace" fontWeight="bold">300</text>
+        {/* Dial knob */}
+        <rect x={150} y={18} width={24} height={14} rx={3} fill="#6b6b6b" />
+        <line x1={155} y1={21} x2={155} y2={29} stroke="#555" strokeWidth={0.6} />
+        <line x1={159} y1={21} x2={159} y2={29} stroke="#555" strokeWidth={0.6} />
+        <line x1={163} y1={21} x2={163} y2={29} stroke="#555" strokeWidth={0.6} />
+        <line x1={167} y1={21} x2={167} y2={29} stroke="#555" strokeWidth={0.6} />
+        {/* Injection button */}
+        <rect x={174} y={20} width={16} height={10} rx={5} fill="#777" />
+        {/* Needle cap */}
+        <polygon points="10,25 2,22 2,28" fill="#666" />
+        {/* Cap cover */}
+        <rect x={2} y={19} width={10} height={12} rx={2} fill="#555" />
+      </svg>
+    );
+  }
+
+  // BD Insulin Syringes — scale barrel length by volume
+  const barrelLength = syringeValue === 0.3 ? 100 : syringeValue === 0.5 ? 120 : 145;
+  const maxUnit = syringeValue === 0.3 ? 30 : syringeValue === 0.5 ? 50 : 100;
+  const tickInterval = maxUnit <= 30 ? 5 : 10;
+  const labelInterval = maxUnit <= 30 ? 10 : 20;
+  const barrelX = 38;
+  const barrelEndX = barrelX + barrelLength;
+
+  return (
+    <svg viewBox={`0 0 ${barrelEndX + 55} 52`} className="w-full h-auto">
+      {/* Needle */}
+      <line x1={2} y1={25} x2={16} y2={25} stroke="#bbb" strokeWidth={1} strokeLinecap="round" />
+      {/* Needle hub */}
+      <polygon points={`16,23 24,19 24,31 16,27`} fill="#e97518" />
+      <rect x={24} y={19} width={14} height={12} rx={1} fill="#e97518" />
+      {/* Barrel */}
+      <rect x={barrelX} y={14} width={barrelLength} height={22} rx={3} fill="rgba(255,255,255,0.06)" stroke="#666" strokeWidth={1} />
+      {/* Tick marks */}
+      {Array.from({ length: maxUnit / tickInterval + 1 }, (_, i) => {
+        const unit = i * tickInterval;
+        const x = barrelX + (unit / maxUnit) * barrelLength;
+        const isLabel = unit % labelInterval === 0;
+        return (
+          <g key={unit}>
+            <line x1={x} y1={36} x2={x} y2={isLabel ? 44 : 40} stroke={isLabel ? "#999" : "#666"} strokeWidth={isLabel ? 0.8 : 0.5} />
+            {isLabel && (
+              <text x={x} y={50} textAnchor="middle" fill="#888" fontSize={5.5} fontFamily="monospace">{unit}</text>
+            )}
+          </g>
+        );
+      })}
+      {/* Finger flanges */}
+      <rect x={barrelEndX} y={10} width={3} height={30} rx={1.5} fill="#666" />
+      {/* Plunger rod */}
+      <rect x={barrelEndX + 3} y={23} width={35} height={4} rx={2} fill="#888" />
+      {/* Plunger cap */}
+      <rect x={barrelEndX + 36} y={18} width={6} height={14} rx={2} fill="#e97518" />
+    </svg>
+  );
+}
 
 const VIAL_OPTIONS = [
   { label: "5 mg", value: 5 },
@@ -386,18 +452,9 @@ export default function PeptideCalculator() {
                     : "bg-white/5 border border-white/10 hover:border-amber-400/40"
                 }`}
               >
-                {/* Syringe image placeholder */}
-                <div className="w-full h-20 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center mb-3 overflow-hidden">
-                  <img
-                    src={opt.image}
-                    alt={opt.label}
-                    className="h-16 w-auto object-contain"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = "none";
-                      (e.target as HTMLImageElement).parentElement!.innerHTML =
-                        '<span class="text-zinc-600 text-xs">Image coming soon</span>';
-                    }}
-                  />
+                {/* Syringe illustration */}
+                <div className="w-full h-16 flex items-center justify-center mb-3 px-1">
+                  <SyringeIllustration syringeValue={opt.value} />
                 </div>
                 <span
                   className={`text-sm font-semibold ${
