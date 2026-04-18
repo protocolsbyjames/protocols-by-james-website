@@ -52,7 +52,7 @@ export default function TermsPage() {
       <p>
         We also offer 1-on-1 mentorship for individuals who want to become
         fitness coaches. Mentorship is scoped and priced per client and is
-        typically billed via Stripe invoice.
+        typically billed via invoice.
       </p>
 
       <h2>4. Health & fitness disclaimer</h2>
@@ -82,10 +82,11 @@ export default function TermsPage() {
 
       <h2>6. Payments & billing</h2>
       <p>
-        Payments are processed by Stripe, Inc. By subscribing, you authorize
-        us (through Stripe) to charge your payment method on a recurring
-        monthly basis at the rate displayed at checkout, plus any applicable
-        taxes, until you cancel. Prices are in U.S. dollars.
+        Payments are processed by LemonSqueezy (Lemon Squeezy, LLC), our
+        merchant of record. By subscribing, you authorize LemonSqueezy to
+        charge your payment method on a recurring monthly basis at the rate
+        displayed at checkout, plus any applicable taxes, until you cancel.
+        Prices are in U.S. dollars.
       </p>
       <p>
         Your subscription renews automatically each month. You can cancel at

@@ -15,7 +15,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
  *   4. Generate a magic link that drops the user into the app's /onboarding
  *      plan-selection page already logged in.
  *   5. Redirect the browser to the magic link URL — they land in the app,
- *      pick a plan, hit Stripe Checkout. Stripe success redirects to
+ *      pick a plan, hit LemonSqueezy Checkout. Checkout success redirects to
  *      protocolsbyjames.com/onboarding/agreement (set on the app's checkout
  *      success_url — that's wired in pbj-fitness-app/src/app/api/checkout/route.ts).
  */

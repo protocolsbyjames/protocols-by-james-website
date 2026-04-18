@@ -212,7 +212,7 @@ export default function ContentPage() {
                 <p className="text-zinc-400 text-sm mb-4">{post.excerpt}</p>
                 <span className="text-amber-400 text-sm font-medium flex items-center gap-1">
                   <BookOpen className="w-4 h-4" />
-                  Coming Soon
+                  Read Now
                 </span>
               </Link>
             ))}

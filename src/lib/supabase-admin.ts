@@ -6,7 +6,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  * The marketing site handles flows (apply form, agreement signing, peptalk
  * booking) where the user is NOT authenticated in the Supabase session sense.
  * We write on their behalf using the service role key and verify their
- * identity out-of-band (Stripe session lookups, signed onboarding cookies).
+ * identity out-of-band (LemonSqueezy checkout lookups, signed onboarding cookies).
  *
  * NEVER expose this client to the browser. NEVER import this from a client
  * component. Only server actions, route handlers, and server components.

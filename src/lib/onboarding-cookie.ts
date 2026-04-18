@@ -6,9 +6,9 @@ import crypto from "node:crypto";
  *
  * The marketing site doesn't share Supabase auth cookies with the app
  * (they live on different subdomains and the app's auth flow requires a
- * password-set step). Instead, after Stripe checkout completes, we mint a
- * short-lived HMAC-signed cookie that says "this browser belongs to user X,
- * who paid Stripe session Y, and is mid-onboarding."
+ * password-set step). Instead, after LemonSqueezy checkout completes, we
+ * mint a short-lived HMAC-signed cookie that says "this browser belongs to
+ * user X, who completed checkout Y, and is mid-onboarding."
  *
  * The cookie is scoped to protocolsbyjames.com so only our site reads it,
  * expires after 24 hours, and is HMAC-signed with ONBOARDING_COOKIE_SECRET
@@ -20,7 +20,7 @@ const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24; // 24h
 
 export type OnboardingClaim = {
   userId: string;
-  stripeSessionId: string;
+  checkoutId: string; // LemonSqueezy checkout ID
   issuedAt: number; // unix seconds
   email: string;
 };

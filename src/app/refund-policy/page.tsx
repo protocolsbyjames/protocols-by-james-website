@@ -66,7 +66,7 @@ export default function RefundPolicyPage() {
       <h2>2. Coach mentorship</h2>
       <p>
         Coach-mentorship engagements are custom services priced per client,
-        typically billed via Stripe invoice at the start of the engagement.
+        typically billed via invoice at the start of the engagement.
         Refunds for mentorship are handled case-by-case depending on scope,
         delivery status, and the terms of your specific engagement
         agreement. Contact us at{" "}
@@ -79,7 +79,7 @@ export default function RefundPolicyPage() {
       <h2>3. How refunds are issued</h2>
       <p>
         Approved refunds are issued to your original payment method via
-        Stripe. Your bank typically makes refunded funds available within
+        LemonSqueezy. Your bank typically makes refunded funds available within
         5–10 business days of approval, though timing is ultimately
         determined by your bank or card issuer.
       </p>

@@ -36,11 +36,12 @@ export default function PrivacyPage() {
 
       <h3>Payment information</h3>
       <p>
-        Payments are processed by <a href="https://stripe.com">Stripe</a>,
-        our third-party payment processor. We do not store or receive your
-        full card number, CVC, or bank credentials. We do receive and store a
-        Stripe customer ID, subscription status, billing history, and the
-        last four digits and expiration month of your payment method.
+        Payments are processed by{" "}
+        <a href="https://www.lemonsqueezy.com">LemonSqueezy</a>, our
+        merchant of record. LemonSqueezy handles all payment processing,
+        tax collection, and compliance. We do not store or receive your full
+        card number, CVC, or bank credentials. We do receive and store a
+        customer ID, subscription status, and billing history.
       </p>
 
       <h3>Technical information</h3>
@@ -73,8 +74,8 @@ export default function PrivacyPage() {
       <p>We share limited information with third-party service providers who help us operate the Services:</p>
       <ul>
         <li>
-          <strong>Stripe</strong> — payment processing. See{" "}
-          <a href="https://stripe.com/privacy">Stripe&apos;s privacy policy</a>.
+          <strong>LemonSqueezy</strong> — payment processing and merchant of record. See{" "}
+          <a href="https://www.lemonsqueezy.com/privacy">LemonSqueezy&apos;s privacy policy</a>.
         </li>
         <li>
           <strong>Supabase</strong> — database, authentication, and file storage hosting.

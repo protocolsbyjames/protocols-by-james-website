@@ -15,13 +15,13 @@ import {
  * Post-payment Consulting & Coaching Agreement signing page.
  *
  * How we land here:
- *   Stripe checkout's `success_url` in pbj-fitness-app/src/app/api/checkout
- *   points to `${marketingUrl}/onboarding/agreement?session_id={...}`. The
- *   page calls `resolveOnboardingContext` which verifies the Stripe session,
- *   pulls the corresponding Supabase profile, mints a signed onboarding
+ *   LemonSqueezy checkout's `success_url` in pbj-fitness-app/src/app/api/checkout
+ *   points to `${marketingUrl}/onboarding/agreement?checkout_id={checkout_id}`.
+ *   The page calls `resolveOnboardingContext` which looks up the user via the
+ *   subscription/order created by the webhook, mints a signed onboarding
  *   cookie, and hands us the user's name/email to pre-fill.
  *
- *   If someone hits this page cold (no session id, no cookie) we bounce them
+ *   If someone hits this page cold (no checkout id, no cookie) we bounce them
  *   back to /apply.
  */
 
@@ -37,10 +37,10 @@ export const dynamic = "force-dynamic";
 export default async function AgreementPage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string; error?: string }>;
+  searchParams: Promise<{ checkout_id?: string; error?: string }>;
 }) {
   const sp = await searchParams;
-  const ctx = await resolveOnboardingContext(sp.session_id);
+  const ctx = await resolveOnboardingContext(sp.checkout_id);
 
   if (!ctx) {
     redirect(

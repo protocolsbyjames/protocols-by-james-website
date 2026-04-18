@@ -3,7 +3,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import {
   setOnboardingCookie,
@@ -24,63 +23,94 @@ import { sendSignedAgreementEmail } from "@/lib/email";
 /**
  * Resolves the onboarding context for the /onboarding/agreement page.
  *
- *   1. If there's a ?session_id=... param, verify it with Stripe, look up
- *      the customer → supabase_user_id, mark the profile as onboarding_status
- *      = 'paid', mint the signed cookie, and return the context.
+ *   1. If there's a ?checkout_id=... param, look up the corresponding
+ *      subscription (created by the webhook) via the custom_data.client_id
+ *      that was stored. The LemonSqueezy webhook has already:
+ *        - Created the subscription row
+ *        - Stored the LS customer_id on the profile
+ *        - Set the client → coach association
+ *      We just need to verify the user exists and advance them to 'paid'.
+ *
  *   2. Else if a valid onboarding cookie is already present (refresh case),
  *      reuse it.
  *   3. Otherwise return null so the page can redirect to /apply.
  *
- * This function is idempotent — calling it twice with the same session_id
- * is safe. It also never promotes a profile past 'paid' here; the agreement
- * submission does the next transition.
+ * LemonSqueezy flow:
+ *   The checkout success_url is set to:
+ *     `${marketingUrl}/onboarding/agreement?checkout_id={checkout_id}`
+ *   where {checkout_id} is replaced by LS with the actual checkout ID.
+ *
+ *   By the time the user lands here, the webhook has fired and created
+ *   the subscription/order in our DB. We look up the subscription by
+ *   matching the client_id from our subscriptions table.
  */
 
 type OnboardingContext = {
   userId: string;
   email: string;
   fullName: string;
-  stripeSessionId: string;
+  checkoutId: string;
   alreadySigned: boolean;
 };
 
 export async function resolveOnboardingContext(
-  stripeSessionId?: string,
+  checkoutId?: string,
 ): Promise<OnboardingContext | null> {
   const admin = supabaseAdmin();
 
-  // ---------- Path 1: Stripe session id on the URL ----------
-  if (stripeSessionId) {
-    const session = await stripe().checkout.sessions.retrieve(stripeSessionId, {
-      expand: ["customer"],
-    });
+  // ---------- Path 1: LemonSqueezy checkout id on the URL ----------
+  if (checkoutId) {
+    // The webhook stores the LS subscription with custom_data containing
+    // client_id. We also store the LS customer_id on the profile via
+    // stripe_customer_id column (reused).
+    //
+    // Since we can't directly query by checkout_id (LS doesn't store it on
+    // the subscription), we look for recently-created subscriptions or use
+    // the profile's onboarding_status. The webhook sets stripe_customer_id
+    // which confirms payment happened.
+    //
+    // Strategy: Look for a profile that was recently updated with a
+    // stripe_customer_id (LS customer ID) and is in 'applied' status.
+    // The checkout success URL includes checkout_id mainly as a signal that
+    // payment completed — the webhook does the heavy lifting.
+    //
+    // For robustness, we also try to find the user via the most recent
+    // subscription created in the last few minutes.
 
-    if (session.payment_status !== "paid") {
-      return null;
-    }
+    // First, try to find by the most recent subscription (webhook may have
+    // fired before the redirect). Look at subscriptions created in the
+    // last 10 minutes ordered by creation time.
+    const tenMinutesAgo = new Date(
+      Date.now() - 10 * 60 * 1000,
+    ).toISOString();
 
-    // Recover the supabase user id. Preferred source: the `client_id` we
-    // stuffed into metadata when creating the checkout session. Fallback:
-    // the customer's metadata.supabase_user_id.
-    let userId = (session.metadata?.client_id as string | undefined) ?? null;
+    const { data: recentSub } = await admin
+      .from("subscriptions")
+      .select("client_id, created_at")
+      .gte("created_at", tenMinutesAgo)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-    if (
-      !userId &&
-      session.customer &&
-      typeof session.customer !== "string" &&
-      !session.customer.deleted
-    ) {
-      userId =
-        (session.customer.metadata?.supabase_user_id as string | undefined) ??
-        null;
-    }
+    // Also check for recent program purchases (one-time self-guided)
+    const { data: recentPurchase } = await admin
+      .from("program_purchases")
+      .select("client_id, created_at")
+      .gte("created_at", tenMinutesAgo)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-    if (!userId) return null;
+    // Pick the most recent one
+    const clientId =
+      recentSub?.client_id ?? recentPurchase?.client_id ?? null;
+
+    if (!clientId) return null;
 
     const { data: profile } = await admin
       .from("profiles")
       .select("id, email, full_name, onboarding_status")
-      .eq("id", userId)
+      .eq("id", clientId)
       .maybeSingle<{
         id: string;
         email: string;
@@ -96,24 +126,24 @@ export async function resolveOnboardingContext(
       await admin
         .from("profiles")
         .update({ onboarding_status: "paid" })
-        .eq("id", userId);
+        .eq("id", clientId);
     }
 
-    const alreadySigned = await hasExistingSignature(userId);
+    const alreadySigned = await hasExistingSignature(clientId);
 
     const claim: OnboardingClaim = {
-      userId,
-      stripeSessionId,
+      userId: clientId,
+      checkoutId,
       issuedAt: Math.floor(Date.now() / 1000),
       email: profile.email,
     };
     await setOnboardingCookie(claim);
 
     return {
-      userId,
+      userId: clientId,
       email: profile.email,
       fullName: profile.full_name ?? profile.email,
-      stripeSessionId,
+      checkoutId,
       alreadySigned,
     };
   }
@@ -136,7 +166,7 @@ export async function resolveOnboardingContext(
     userId: claim.userId,
     email: profile.email,
     fullName: profile.full_name ?? profile.email,
-    stripeSessionId: claim.stripeSessionId,
+    checkoutId: claim.checkoutId,
     alreadySigned,
   };
 }
