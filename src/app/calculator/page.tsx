@@ -36,7 +36,7 @@ export default function CalculatorPage() {
                 This calculator determines how far to pull your insulin syringe based on the concentration of your reconstituted peptide. Your peptide amount (mg) divided by the water volume (mL) gives you the concentration, and your desired dose is converted to the matching syringe units.
               </p>
               <p>
-                Insulin syringes are marked in &ldquo;units&rdquo; where 100 units equals 1 mL. A 0.3 mL syringe goes up to 30 units, a 0.5 mL syringe goes to 50 units, and a 1.0 mL syringe goes to 100 units.
+                Insulin syringes are marked in &ldquo;units&rdquo; where 100 units equals 1 mL. A 0.3 mL syringe goes up to 30 units, a 0.5 mL syringe goes to 50 units, and a 1.0 mL syringe goes to 100 units. Peptide pens hold 300 units (3 mL) and let you dial your dose instead of drawing with a syringe.
               </p>
               <p>
                 For best results, always use bacteriostatic water for reconstitution, store reconstituted peptides in the refrigerator, and follow sterile technique when drawing doses.

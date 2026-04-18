@@ -4,9 +4,34 @@ import { useState, useMemo } from "react";
 import { Calculator, AlertTriangle } from "lucide-react";
 
 const SYRINGE_OPTIONS = [
-  { label: "0.3 mL / 30 units", value: 0.3, units: 30 },
-  { label: "0.5 mL / 50 units", value: 0.5, units: 50 },
-  { label: "1.0 mL / 100 units", value: 1.0, units: 100 },
+  {
+    label: "0.3 mL / 30 units",
+    value: 0.3,
+    units: 30,
+    description: "BD Insulin Syringe — smallest, most precise for low-volume doses",
+    image: "/images/syringes/bd-03ml.png",
+  },
+  {
+    label: "0.5 mL / 50 units",
+    value: 0.5,
+    units: 50,
+    description: "BD Insulin Syringe — most common for peptide dosing",
+    image: "/images/syringes/bd-05ml.png",
+  },
+  {
+    label: "1.0 mL / 100 units",
+    value: 1.0,
+    units: 100,
+    description: "BD Insulin Syringe — for higher volume draws",
+    image: "/images/syringes/bd-10ml.png",
+  },
+  {
+    label: "Peptide Pen / 300 units",
+    value: 3.0,
+    units: 300,
+    description: "Pre-filled peptide pen — dial your dose, no syringe needed",
+    image: "/images/syringes/peptide-pen.png",
+  },
 ];
 
 const VIAL_OPTIONS = [
@@ -72,12 +97,14 @@ function SyringeVisual({
   const fillWidth = (clampedPercent / 100) * barrelWidth;
 
   // Tick marks along the top
-  const tickCount = maxUnits / 10;
+  const tickInterval = maxUnits <= 50 ? 10 : maxUnits <= 100 ? 10 : 50;
+  const majorInterval = maxUnits <= 30 ? 10 : maxUnits <= 100 ? 20 : 100;
+  const tickCount = maxUnits / tickInterval;
   const ticks = [];
   for (let i = 0; i <= tickCount; i++) {
-    const unitVal = i * 10;
+    const unitVal = i * tickInterval;
     const x = barrelLeft + (i / tickCount) * barrelWidth;
-    const isMajor = unitVal % (maxUnits <= 30 ? 10 : 20) === 0;
+    const isMajor = unitVal % majorInterval === 0;
     ticks.push({ x, unitVal, isMajor });
   }
 
@@ -347,14 +374,44 @@ export default function PeptideCalculator() {
           <label className="block text-sm font-semibold text-zinc-300 mb-3">
             1. What is the total volume of your syringe?
           </label>
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {SYRINGE_OPTIONS.map((opt) => (
-              <OptionButton
+              <button
                 key={opt.value}
-                label={opt.label}
-                selected={syringeVolume === opt.value}
+                type="button"
                 onClick={() => setSyringeVolume(opt.value)}
-              />
+                className={`flex flex-col items-center rounded-xl p-4 text-center transition-all ${
+                  syringeVolume === opt.value
+                    ? "bg-amber-400/10 border-2 border-amber-400 shadow-lg shadow-amber-400/10"
+                    : "bg-white/5 border border-white/10 hover:border-amber-400/40"
+                }`}
+              >
+                {/* Syringe image placeholder */}
+                <div className="w-full h-20 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center mb-3 overflow-hidden">
+                  <img
+                    src={opt.image}
+                    alt={opt.label}
+                    className="h-16 w-auto object-contain"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                      (e.target as HTMLImageElement).parentElement!.innerHTML =
+                        '<span class="text-zinc-600 text-xs">Image coming soon</span>';
+                    }}
+                  />
+                </div>
+                <span
+                  className={`text-sm font-semibold ${
+                    syringeVolume === opt.value
+                      ? "text-amber-400"
+                      : "text-zinc-300"
+                  }`}
+                >
+                  {opt.label}
+                </span>
+                <span className="text-[10px] text-zinc-500 mt-1 leading-tight">
+                  {opt.description}
+                </span>
+              </button>
             ))}
           </div>
         </div>
@@ -509,7 +566,7 @@ export default function PeptideCalculator() {
                     <span className="text-white font-semibold">
                       {effectiveDoseMcg} mcg ({(effectiveDoseMcg! / 1000).toFixed(2)} mg)
                     </span>
-                    , pull the syringe to:
+                    , {syringeVolume === 3.0 ? "dial the pen to" : "pull the syringe to"}:
                   </p>
                   <p className="text-amber-400 text-5xl font-bold mb-1">
                     {result.syringeUnits} units
