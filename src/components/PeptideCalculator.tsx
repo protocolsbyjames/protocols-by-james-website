@@ -5,28 +5,28 @@ import { Calculator, AlertTriangle } from "lucide-react";
 
 const SYRINGE_OPTIONS = [
   {
-    label: "0.3 mL / 30 units",
+    label: "0.3 mL",
     value: 0.3,
     units: 30,
-    description: "BD Insulin Syringe — smallest, most precise for low-volume doses",
+    image: "/images/syringes/bd-03ml.png",
   },
   {
-    label: "0.5 mL / 50 units",
+    label: "0.5 mL",
     value: 0.5,
     units: 50,
-    description: "BD Insulin Syringe — most common for peptide dosing",
+    image: "/images/syringes/bd-05ml.png",
   },
   {
-    label: "1.0 mL / 100 units",
+    label: "1.0 mL",
     value: 1.0,
     units: 100,
-    description: "BD Insulin Syringe — for higher volume draws",
+    image: "/images/syringes/bd-10ml.png",
   },
   {
     label: "Peptide Pen / 300 units",
     value: 3.0,
     units: 300,
-    description: "Pre-filled peptide pen — dial your dose, no syringe needed",
+    image: "/images/syringes/peptide-pen.png",
   },
 ];
 
@@ -486,16 +486,27 @@ export default function PeptideCalculator() {
               <button
                 key={opt.value}
                 type="button"
-                onClick={() => setSyringeVolume(opt.value)}
+                onClick={() => {
+                  setSyringeVolume(opt.value);
+                  if (opt.value === 3.0) {
+                    setWaterMl(3);
+                    setShowWaterCustom(false);
+                    setWaterCustom("");
+                  }
+                }}
                 className={`flex flex-col items-center rounded-xl p-4 text-center transition-all ${
                   syringeVolume === opt.value
                     ? "bg-amber-400/10 border-2 border-amber-400 shadow-lg shadow-amber-400/10"
                     : "bg-white/5 border border-white/10 hover:border-amber-400/40"
                 }`}
               >
-                {/* Syringe illustration */}
-                <div className="w-full h-16 flex items-center justify-center mb-3 px-1">
-                  <SyringeIllustration syringeValue={opt.value} />
+                {/* Syringe/pen photo */}
+                <div className="w-full h-20 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center mb-3 overflow-hidden">
+                  <img
+                    src={opt.image}
+                    alt={opt.label}
+                    className="h-16 w-auto object-contain"
+                  />
                 </div>
                 <span
                   className={`text-sm font-semibold ${
@@ -505,9 +516,6 @@ export default function PeptideCalculator() {
                   }`}
                 >
                   {opt.label}
-                </span>
-                <span className="text-[10px] text-zinc-500 mt-1 leading-tight">
-                  {opt.description}
                 </span>
               </button>
             ))}
