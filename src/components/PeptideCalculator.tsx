@@ -338,6 +338,47 @@ function SyringeVisual({
   );
 }
 
+/* ── Horizontal Peptide Pen SVG (result view) ── */
+function PenVisual({ units }: { units: number }) {
+  const displayUnits = Math.round(units * 10) / 10;
+  const unitText = Number.isInteger(displayUnits) ? displayUnits.toString() : displayUnits.toFixed(1);
+
+  return (
+    <svg viewBox="0 0 560 90" className="w-full h-auto" role="img" aria-label={`Peptide pen dialed to ${displayUnits} units`}>
+      {/* Cap */}
+      <rect x={2} y={30} width={40} height={30} rx={6} fill="#555" />
+      <rect x={2} y={30} width={40} height={12} rx={4} fill="rgba(255,255,255,0.08)" />
+
+      {/* Pen body */}
+      <rect x={42} y={24} width={340} height={42} rx={14} fill="#8a8a8a" />
+      {/* Metallic sheen */}
+      <rect x={42} y={24} width={340} height={16} rx={8} fill="rgba(255,255,255,0.12)" />
+
+      {/* Dose window */}
+      <rect x={240} y={32} width={60} height={26} rx={4} fill="#0b1227" stroke="#666" strokeWidth={1} />
+      <text x={270} y={52} textAnchor="middle" fill="#fbbf24" fontSize={16} fontFamily="monospace" fontWeight="bold">
+        {unitText}
+      </text>
+
+      {/* Label above window */}
+      <text x={270} y={20} textAnchor="middle" fill="#fbbf24" fontSize={10} fontFamily="sans-serif" fontWeight="bold">
+        DIAL TO
+      </text>
+
+      {/* Dial knob */}
+      <rect x={382} y={28} width={60} height={34} rx={6} fill="#6b6b6b" />
+      {/* Grip lines */}
+      {[392, 400, 408, 416, 424, 432].map((x) => (
+        <line key={x} x1={x} y1={34} x2={x} y2={56} stroke="#555" strokeWidth={1} />
+      ))}
+
+      {/* Injection button */}
+      <rect x={442} y={32} width={40} height={26} rx={13} fill="#777" />
+      <rect x={442} y={32} width={40} height={10} rx={5} fill="rgba(255,255,255,0.08)" />
+    </svg>
+  );
+}
+
 export default function PeptideCalculator() {
   const [syringeVolume, setSyringeVolume] = useState<number | null>(null);
   const [vialMg, setVialMg] = useState<number | null>(null);
@@ -634,13 +675,17 @@ export default function PeptideCalculator() {
                   </p>
                 </div>
 
-                {/* Horizontal syringe underneath */}
+                {/* Visual: pen or syringe */}
                 <div className="mt-4">
-                  <SyringeVisual
-                    fillPercent={result.fillPercent}
-                    units={result.syringeUnits}
-                    maxUnits={result.syringeMax}
-                  />
+                  {syringeVolume === 3.0 ? (
+                    <PenVisual units={result.syringeUnits} />
+                  ) : (
+                    <SyringeVisual
+                      fillPercent={result.fillPercent}
+                      units={result.syringeUnits}
+                      maxUnits={result.syringeMax}
+                    />
+                  )}
                 </div>
               </div>
             )}
